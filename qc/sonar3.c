@@ -5,13 +5,5 @@
 
 task main()
 {
-wait1Msec(1000);
-while(SensorValue(ultrain)>10){
-	motor(rightMotor)= 40;
-	motor(leftMotor)= 50;
-}
-while(SensorValue(ultrain)<10){
-	motor(rightMotor)= 0;
-	motor(leftMotor)= 0;
-}
+
 }

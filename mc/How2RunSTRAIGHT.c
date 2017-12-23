@@ -15,20 +15,21 @@ nMotorEncoder[rightMotor] = 0;
 nMotorEncoder[leftMotor] = 0;
 
 //While less than 629 encoder counts of the right motor == 1 revolution?
-/*while(nMotorEncoder[rightMotor] < 629){
-	//Move forward at half power
-		motor[rightMotor] = 63;
-		// after the rightMotor is identified w/ encoder value, then comment right, and enable left for same testing
-		//motor[leftMotor]  = 63;
-	}*/
-
-	while(abs(nMotorEncoder[leftMotor])< 629){
-	//Move forward at half power
-		// after the rightMotor is identified w/ encoder value, then comment right, and enable left for same testing
-		motor[leftMotor]  = 63;
+while(nMotorEncoder[rightMotor] < 1800){
+	if (nMotorEncoder[rightMotor] > abs(nMotorEncoder[leftMotor])){
+		motor[rightMotor] = 37;
+		motor[leftMotor] = 63;
 	}
-motor[rightMotor] = 0;
-motor[leftMotor] = 0;
-nMotorEncoder[rightMotor] = 0;
-nMotorEncoder[leftMotor] = 0;
+	if (nMotorEncoder[rightMotor] < abs(nMotorEncoder[leftMotor])){
+		motor[rightMotor] = 60;
+		motor[leftMotor] = 40;
+	}
+	if (nMotorEncoder[rightMotor] == abs(nMotorEncoder[leftMotor])){
+		motor[rightMotor] = 60;
+		motor[leftMotor] = 63;
+	}
+}
+
+
+
 }

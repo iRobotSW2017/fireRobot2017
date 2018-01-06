@@ -14,8 +14,8 @@ task main()
 {
 wait1Msec(1000);
 while (SensorValue[ultrain] > 18 && SensorValue[RightUltra] <= 15){
-	motor[rightmotor] = 53;
-	motor[leftmotor] = 63;
+	motor[rightmotor] = 63;
+	motor[leftmotor] = 73;
 	//* go to the conjunction
 }
 motor[leftmotor] = 0;

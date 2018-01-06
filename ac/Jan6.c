@@ -18,20 +18,20 @@ while (SensorValue(ultrain)> 21 && SensorValue(RightUltra)<= 18){
 	motor(leftmotor) = 63;
 	//* go to the conjunction
 }
-motor(rightmotor) = 0;
-motor(leftmotor) = 0;
 wait1Msec(1000);
 Pointturn(120, -120, 490);
 //* turn
 motor(rightmotor) = 0;
 motor(leftmotor) = 0;
-while (SensorValue(ultrain)>21){
+while (SensorValue(ultrain)> 25){
 	motor(rightmotor) = 53;
 	motor(leftmotor) = 63;
 }
 //* go to the wall so you can turn into the room
+motor(rightmotor) = 0;
+motor(leftmotor) = 0;
 Pointturn(120, -120, 490);
-//* turn into the room
+//* turn into the room dont knock over the wall. MEXICAN!!!!
 motor(rightmotor) = 0;
 motor(leftmotor) = 0;
 while (SensorValue(ultrain)>5){

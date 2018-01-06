@@ -13,7 +13,7 @@ void Pointturn(int leftSpeed, int rightSpeed, int waittime){
 task main()
 {
 wait1Msec(1000);
-while (SensorValue(ultrain)>10 && SensorValue(RightUltra)<10){
+while (SensorValue(ultrain)> 21 && SensorValue(RightUltra)<= 18){
 	motor(rightmotor) = 53;
 	motor(leftmotor) = 63;
 	//* go to the conjunction
@@ -21,16 +21,16 @@ while (SensorValue(ultrain)>10 && SensorValue(RightUltra)<10){
 motor(rightmotor) = 0;
 motor(leftmotor) = 0;
 wait1Msec(1000);
-Pointturn(120, -120, 1000);
+Pointturn(120, -120, 490);
 //* turn
 motor(rightmotor) = 0;
 motor(leftmotor) = 0;
-while (SensorValue(ultrain)>10){
+while (SensorValue(ultrain)>21){
 	motor(rightmotor) = 53;
 	motor(leftmotor) = 63;
 }
 //* go to the wall so you can turn into the room
-Pointturn(120, -120, 1000);
+Pointturn(120, -120, 490);
 //* turn into the room
 motor(rightmotor) = 0;
 motor(leftmotor) = 0;

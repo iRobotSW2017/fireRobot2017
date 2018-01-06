@@ -7,22 +7,16 @@
 task main()
 {
 while(SensorValue[fwdultrain] > 36){
-	motor(LeftMotor)=50;
+	motor(LeftMotor)=60;
 	motor(RightMotor)=50;
 }
 while(SensorValue[fwdultrain] < 36){
 	motor(RightMotor)=0;
 	motor(LeftMotor)=0;
 	wait1Msec(2000);
-	while(SensorValue[Rultrain] > 4){
-		motor(LeftMotor)=120;
-		motor(RightMotor)=-120;
-		wait1Msec(1000);
-	}
-	while(SensorValue[Rultrain] < 4){
-		motor(LeftMotor)=0;
-		motor(RightMotor)=0;
-	}
+	motor(RightMotor)=-110;
+	motor(LeftMotor)=120;
+	wait1Msec(490);
 }
 	while(SensorValue[fwdultrain] > 38){
 		motor(LeftMotor)=60;
@@ -32,10 +26,8 @@ while(SensorValue[fwdultrain] < 36){
 		motor(LeftMotor)=0;
 		motor(RightMotor)=0;
 		wait1Msec(2000);
-		while(SensorValue[Rultrain] > 4){
-			motor(RightMotor)=-120;
-			motor(LeftMotor)=120;
-			wait1Msec(1000);
+		motor(LeftMotor)=120;
+		motor(RightMotor)=-110;
 		}
 		while(SensorValue[fwdultrain] > 78){
 			motor(LeftMotor)=60;
@@ -44,12 +36,10 @@ while(SensorValue[fwdultrain] < 36){
 		while(SensorValue[fwdultrain] < 78){
 			motor(LeftMotor)=0;
 			motor(RightMotor)=0;
-			while(SensorValue[Rultrain] > 4){
-				motor(RightMotor)=-120;
-				motor(LeftMotor)=120;
-				wait1Msec(1000);
+			motor(RightMotor)=-120;
+			motor(LeftMotor)=120;
+			wait1Msec(495);
 			}
-		}
 		while(SensorValue[fwdultrain] > 8){
 			motor(LeftMotor)=60;
 			motor(RightMotor)=60;
@@ -59,5 +49,4 @@ while(SensorValue[fwdultrain] < 36){
 			motor(RightMotor)=0;
 		}
 		//ANNIHALATE. EXODIA, OBLITERATE!!!!!!!!! DIESTUPIDKOALASCUMBAGNAMEDRILEYRENDLOW
-	}
 }

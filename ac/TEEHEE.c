@@ -18,7 +18,7 @@ while (SensorValue(RightUltra)<= 15){
 	motor[leftmotor] = 63;
 	//* go to the conjunction
 }
-Pointturn(120, -120, 490);
+/* Pointturn(120, -120, 490);
 //* turn
 motor[rightmotor] = 0;
 motor[leftmotor] = 0;
@@ -42,4 +42,5 @@ while (SensorValue(ultrain)>5){
 //* enter the room
 motor(rightmotor) = 0;
 motor(leftmotor) = 0;
+*\
 }

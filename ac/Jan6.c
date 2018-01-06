@@ -39,7 +39,7 @@ Pointturn (120, -120, 475);
 motor[rightmotor] = 0;
 motor[leftmotor] = 0;
 wait1Msec(1000);
-while (SensorValue[ultrain]> 10){
+while (SensorValue[ultrain] > 15){
 	motor[rightmotor] = 53;
 	motor[leftmotor] = 63;
 }

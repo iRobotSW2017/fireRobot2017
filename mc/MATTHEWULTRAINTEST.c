@@ -7,14 +7,14 @@ task main()
 {
 wait1Msec(2000);
 repeat(3){
-while(SensorValue[fwdultrain]>27){
-	motor(LeftMotor)=60;
-	motor(RightMotor)=50;
-}
-while(SensorValue[fwdultrain]<27){
-	motor(LeftMotor)=120;
-	motor(RightMotor)=-120;
-	wait1Msec(490);
-}
+	while(SensorValue[fwdultrain]>27){
+		motor(LeftMotor)=60;
+		motor(RightMotor)=50;
+	}
+	while(SensorValue[fwdultrain]<27){
+		motor(LeftMotor)=120;
+		motor(RightMotor)=-120;
+		wait1Msec(475);
+	}
 }
 }

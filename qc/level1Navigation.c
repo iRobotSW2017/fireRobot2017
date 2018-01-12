@@ -94,10 +94,22 @@ task main()
 	}
 
 	SensorValue[redLed] = 0; //indicate open turn
-	completeStop(100);
+	completeStop(200);
 
 	// make a 90 degree right turn
 	turnRight(90, 40);
 	SensorValue[redLed] = 1; //indicate turn finish
+
+	//robot comes into the room
+	while (SensorValue[frontUltra] > 23){
+		encoderReset();
+		driveStraight(lowSpd, comSpd);
+	}
+	completeStop(0);
+
+	//360 turn to detect detect candle
+	//if found, stop & fan on
+	//if not found, complete 360
+	//backward to exit the room
 
 }

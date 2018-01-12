@@ -42,7 +42,7 @@ void turnRight(int degrees, int speed){
 		nMotorEncoder[leftMotor] = 0;
 
   //Determine tickGoal
-  int tickGoal = (51 * degrees) / 10;
+  int tickGoal = (50 * degrees) / 10;
 
   //Perform a point turn to the left. We will use lower power values for more accuracy.
   //default 40
@@ -101,13 +101,16 @@ task main()
 	SensorValue[redLed] = 1; //indicate turn finish
 
 	//robot comes into the room
-	while (SensorValue[frontUltra] > 23){
+	while (SensorValue[frontUltra] > 40){
 		encoderReset();
 		driveStraight(lowSpd, comSpd);
 	}
 	completeStop(0);
 
 	//360 turn to detect detect candle
+	wait1Msec(2000);
+	turnRight(360, 40);
+
 	//if found, stop & fan on
 	//if not found, complete 360
 	//backward to exit the room

@@ -1,4 +1,4 @@
-#pragma config(Sensor, dgtl3,  fwdultrain,     sensorSONAR_cm)
+ #pragma config(Sensor, dgtl3,  fwdultrain,     sensorSONAR_cm)
 #pragma config(Sensor, dgtl7,  Rultrain,      sensorSONAR_cm)
 #pragma config(Motor,  port1,           RightMotor,    tmotorVex393_HBridge, openLoop)
 #pragma config(Motor,  port10,          LeftMotor,     tmotorVex393_HBridge, openLoop, reversed)

@@ -38,8 +38,7 @@ void encoderReset(){
 
 void turnRight(int degrees, int speed){
 	  //Reset encoders
-		nMotorEncoder[rightMotor] = 0;
-		nMotorEncoder[leftMotor] = 0;
+	encoderReset();
 
   //Determine tickGoal
   int tickGoal = (50 * degrees) / 10;
@@ -56,6 +55,8 @@ void turnRight(int degrees, int speed){
     if(nMotorEncoder[leftMotor] > tickGoal) {motor[leftMotor] = 0;}
     if(nMotorEncoder[rightMotor] < -1*tickGoal) {motor[rightMotor] = 0;}
   }
+	//turn completed, fully stop engine
+	completeStop(0);
 }
 
 task main()
@@ -79,7 +80,6 @@ task main()
 	// make a 90 degree right turn
 	turnRight(90, 40);
 	SensorValue[redLed] = 1; //indicate turn finish
-	completeStop(0);
 
 	//wait1Msec(2000);	//wait for 2 secs to make sure ultrasonic sensor is free from noise
 	// if @ open area, move
@@ -92,13 +92,13 @@ task main()
 	}
 
 	//move along with the wall, stop when it is open on right side
+	encoderReset();
 	while (SensorValue[rightUltra] <= 23){
-		encoderReset();
 		driveStraight(lowSpd, comSpd);
 	}
 
 	SensorValue[redLed] = 0; //indicate open turn
-	completeStop(120);
+	completeStop(130);
 
 	// make a 90 degree right turn
 	turnRight(90, 40);

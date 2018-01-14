@@ -62,14 +62,14 @@ task main()
 {
 	int lowSpd = 50;
 	int comSpd = 63;
-	int delaySec = 300;
+	int delaySec = 350;
 
 	SensorValue[redLed] = 1; //make sure RED-LED is off
 	wait1Msec(2000);
 
 	//move along with the wall, stop when it is open on right side
+	encoderReset();
 	while (SensorValue[rightUltra] <= 23){
-		encoderReset();
 		driveStraight(lowSpd, comSpd);
 	}
 
@@ -79,11 +79,15 @@ task main()
 	// make a 90 degree right turn
 	turnRight(90, 40);
 	SensorValue[redLed] = 1; //indicate turn finish
+	completeStop(0);
 
-	// if @ open area, move forward
+	//wait1Msec(2000);	//wait for 2 secs to make sure ultrasonic sensor is free from noise
+	// if @ open area, move
 	//while (SensorValue[rightUltra] > 23 && SensorValue[frontUltra] > 23){
-	while (SensorValue[frontUltra] > 23){
-		encoderReset();
+	encoderReset();
+	SensorValue[redLed] = 0; //indicate dual sensors
+	while ((SensorValue[rightUltra] > 23) && (SensorValue[frontUltra] > 23)){
+	//while (SensorValue[frontUltra] > 23){
 		driveStraight(lowSpd, comSpd);
 	}
 
@@ -94,15 +98,15 @@ task main()
 	}
 
 	SensorValue[redLed] = 0; //indicate open turn
-	completeStop(200);
+	completeStop(120);
 
 	// make a 90 degree right turn
 	turnRight(90, 40);
 	SensorValue[redLed] = 1; //indicate turn finish
 
 	//robot comes into the room
+	encoderReset();
 	while (SensorValue[frontUltra] > 40){
-		encoderReset();
 		driveStraight(lowSpd, comSpd);
 	}
 	completeStop(0);

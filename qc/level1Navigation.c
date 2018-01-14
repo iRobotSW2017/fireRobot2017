@@ -37,7 +37,9 @@ void encoderReset(){
 }
 
 void turnRight(int degrees, int speed){
-	  //Reset encoders
+	//fully stop engine
+	completeStop(0);
+	//Reset encoders
 	encoderReset();
 
   //Determine tickGoal

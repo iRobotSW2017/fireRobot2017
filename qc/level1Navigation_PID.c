@@ -33,7 +33,7 @@ void turnRight(int degrees, int speed){
 	encoderReset();
 
   //Determine tickGoal
-  int tickGoal = (38 * degrees) / 10;
+  int tickGoal = (37 * degrees) / 10;	//38
 
   //Perform a point turn to the left. We will use lower power values for more accuracy.
   //default 40
@@ -47,34 +47,32 @@ void turnRight(int degrees, int speed){
     if(nMotorEncoder[leftMotor] > tickGoal) {motor[leftMotor] = 0;}
     if(nMotorEncoder[rightMotor] < -1*tickGoal) {motor[rightMotor] = 0;}
   }
+
 	//turn completed, fully stop engine
 	completeStop(0);
 }
 
 task main()
 {
-	int comSpd = 60;
+	int comSpd = 80;
 	int comAdjSpd = 31;
-	int delaySec = 350;
+	int delaySec = 450;
 	int frontSpace = 12; //(46-30)/2
+	int rightSpace = 23;
 
 	SensorValue[redLed] = 1; //make sure RED-LED is off
 	wait1Msec(2000);
 
 	//move along with the wall, stop when it is open on right side
 	encoderReset();
-	while (SensorValue[rightUltra] <= 23){
+	while (SensorValue[rightUltra] <= rightSpace){
 		//driveStraight(lowSpd, comSpd);
 		driveStraightPID(comSpd);
 	}
 
-	//int _initialRSpc = SensorValue[rightUltra];
-	//while (SensorValue[rightUltra] <= 23){
-		//driveStraightRSonic((comSpd-15), comSpd, _initialRSpc, 50);
-	//}
-
-	//SensorValue[redLed] = 0; //indicate open turn
+	SensorValue[redLed] = 0; //indicate open turn
 	completeStop(delaySec);
+	SensorValue[redLed] = 1; //indicate open turn
 
 	// make a 90 degree right turn
 	turnRight(90, 40);
@@ -85,14 +83,14 @@ task main()
 	//while (SensorValue[rightUltra] > 23 && SensorValue[frontUltra] > 23){
 	encoderReset();
 	//SensorValue[redLed] = 0; //indicate dual sensors
-	while ((SensorValue[rightUltra] > 23) && (SensorValue[frontUltra] > 23)){
+	while ((SensorValue[rightUltra] > rightSpace) && (SensorValue[frontUltra] > rightSpace)){
 	//while (SensorValue[frontUltra] > 23){
 		driveStraightPID(comSpd);
 	}
 
 	//move along with the wall, stop when it is open on right side
 	encoderReset();
-	while (SensorValue[rightUltra] <= 23){
+	while (SensorValue[rightUltra] <= rightSpace){
 		driveStraightPID(comSpd);
 	}
 	completeStop(0);
@@ -111,7 +109,7 @@ task main()
 
 	//robot comes into the room
 	encoderReset();
-	while (SensorValue[frontUltra] > 36){
+	while (SensorValue[frontUltra] > 30){
 		driveStraightPID(comSpd);
 	}
 	completeStop(0);
@@ -119,7 +117,9 @@ task main()
 
 	//360 turn to detect detect candle
 	wait1Msec(2000);
-	turnRight((360), 40);
+	SensorValue[redLed] = 0; //indicate turn start
+	turnRight(360, 40);
+	SensorValue[redLed] = 1; //indicate turn finish
 
 	//if found, stop & fan on
 	//if not found, complete 360

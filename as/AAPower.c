@@ -32,28 +32,30 @@ task main(){
 while(SensorValue[sonarright]<20){
  Straight(80, 70);
 	}
-//when it is less than 20, turn right.
+// we stop and turn right
 Waitvoid();
 Pointturn(120, -120, 413);
 Waitvoid();
-//when it is more than 20, go straight.
+//when the front ultrasonic sensor is greater than 23, go straight until the sonarin value
+// doesn't satisfy the equation anymore
 while(SensorValue[sonarin]>23){
 	Straight(63,53);
 }
 Waitvoid();
-//when left sensor is more than 20, turn left.
+//stop, and wait to enter the room
 Pointturn(120,-120,413);
 Waitvoid();
 //while it is less than 20, go straight.
 while(SensorValue[sonarin]>28){
 	Straight(55, 45);
 }
+// we have entered the room!!!
 Waitvoid();
 Pointturn(60, -60, 1750);
+// check the room for the candle
 Waitvoid();
 while (SensorValue[sonarin]>=20){
 	Straight(63, 53);
 }
 Waitvoid();
-
 }

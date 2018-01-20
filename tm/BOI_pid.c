@@ -48,10 +48,10 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		goStraight(comSpd, comSpd);
 		wait1Msec(450);
-		completeStop(500);
+		completeStop(5000);
 
 		//make 90 turn, going to room#1 direction
-		pointTurn(comSpd, -1*comSpd, 1000);//turn to the room so we can almost enter.
+		pointTurn(comSpd, -1*comSpd, 1000);	//turn to the room so we can almost enter.
 
 		//allow te robot to move forward
 		while(SensorValue[frontUltra]>25){

@@ -47,7 +47,7 @@ task main()
 
 		//allow the robot to move a little more, position @ the center of intersection
 		goStraight(comSpd, comSpd);
-		wait1Msec(600);
+		wait1Msec(450);
 		completeStop(500);
 
 		//make 90 turn, going to room#1 direction
@@ -92,7 +92,6 @@ task main()
 
 		goStraight(comSpd, comSpd);// move to center of the hallways
 		wait1Msec(1500);
-
 
 
 }

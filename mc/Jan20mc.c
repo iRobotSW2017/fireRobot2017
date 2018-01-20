@@ -31,8 +31,6 @@ goStraight(60,60);//to move more forward so the bot doesnt hit wall
 wait1Msec(300);
 completeStop(500);
 pointTurn(60,-60,900); //turn to the room so we can almost enter.
-goStraight(60,60);
-wait1Msec(500);
 
 while(SensorValue[fwdultrain]>25){
 	goStraight(60,60);

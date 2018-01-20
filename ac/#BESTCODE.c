@@ -9,6 +9,7 @@ void Pointturn(int leftSpeed, int rightSpeed, int waittime){
 	motor[leftmotor]=leftSpeed;
 	wait1Msec(waittime);
 	//* easy turns
+	//* rightSpeed = leftSpeed + 10
 }
 
 void Straight(int leftval, int rightval){
@@ -33,7 +34,8 @@ while (SensorValue[FrontUltra] > 18 && SensorValue[RightUltra] <= 20){
 }
 Waitvoid ();
 Pointturn(120, -120, 475);
-//* turn
+//* 475 is too much on Ac's basement floor
+//* 420 or 410 is gucci for Ac's basement floor
 Waitvoid ();
 while (SensorValue[FrontUltra]>25){
 	Straight(63, 53);
@@ -45,6 +47,7 @@ Pointturn (120, -120, 475);
 Waitvoid ();
 while (SensorValue[FrontUltra] > 35){
 	Straight(63, 53);
+	//* 35 is too much
 }
 //* enter the room
 Waitvoid ();

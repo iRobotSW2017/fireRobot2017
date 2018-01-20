@@ -34,21 +34,26 @@ while(SensorValue[sonarright]<20){
 	}
 //when it is less than 20, turn right.
 Waitvoid();
-Pointturn(120, -120, 415);
+Pointturn(120, -120, 413);
 Waitvoid();
 //when it is more than 20, go straight.
-while(SensorValue[sonarin]>25){
+while(SensorValue[sonarin]>23){
 	Straight(63,53);
 }
 Waitvoid();
 //when left sensor is more than 20, turn left.
-Pointturn(120,-120,412);
+Pointturn(120,-120,413);
 Waitvoid();
 //while it is less than 20, go straight.
-while(SensorValue[sonarin]>30){
-	Straight(63, 53);
+while(SensorValue[sonarin]>28){
+	Straight(55, 45);
 }
 Waitvoid();
 Pointturn(60, -60, 1750);
 Waitvoid();
+while (SensorValue[sonarin]>=20){
+	Straight(63, 53);
+}
+Waitvoid();
+
 }

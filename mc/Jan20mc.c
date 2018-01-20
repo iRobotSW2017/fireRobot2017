@@ -17,7 +17,7 @@ void completeStop (int delaytime  ){
 }
 void pointTurn (int leftspeed, int rightspeed, int delaytime){
 motor(RightMotor)=rightspeed;
-	motor(LeftMotor)=leftspeed;
+	motor(LeftMotor)=leftspeed;//function to turn
 	wait1Msec(delaytime);
 }
 
@@ -28,37 +28,37 @@ while(SensorValue[Rultrain]<20){//Right motor is better to use than fwd motor be
 }
 completeStop(1000);
 goStraight(60,60);//to move more forward so the bot doesnt hit wall
-wait1Msec(100);
+wait1Msec(300);
 completeStop(500);
-pointTurn(60,-60,900);
+pointTurn(60,-60,900); //turn to the room so we can almost enter.
 goStraight(60,60);
 wait1Msec(500);
 
 while(SensorValue[fwdultrain]>25){
 	goStraight(60,60);
 }
-while(SensorValue[fwdultrain]<25){
+while(SensorValue[fwdultrain]<25){  //when there is no space ahead
 	completeStop(1000);
-	pointTurn(60,-60,920);
+	pointTurn(60,-60,920);//turn into the room
 }
 completeStop(1000);
 while(SensorValue[fwdultrain]>30){
-	goStraight(60,60);
+	goStraight(60,60);  //Walk straight
 }
 while(SensorValue[fwdultrain]<35){
 	completeStop(1000);
-	pointTurn(60,-60,1750);
+	pointTurn(60,-60,1750);//180 degree turn
 	completeStop(1000);
 }
 while(SensorValue[fwdultrain]>25){
 	goStraight(60,60);
 }
 while(SensorValue[fwdultrain]<25){
-	completeStop(1000);
-	pointTurn(60,-60,920);
+	completeStop(1000);//exit the room
+	pointTurn(-60,60,920);
 }
 completeStop(1000);
-goStraight(60,60);
+goStraight(60,60);// move to center of the hallways
 wait1Msec(1500);
 
 //ANNIHALATE EXODIA OBLITERATE!!!! BOIBOIBOI!!!!! DIDDLY DARN IT, I MISSED!!!! CHARGE UP THE DEATHSTAR!!!!!

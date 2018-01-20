@@ -55,7 +55,7 @@ while(SensorValue[fwdultrain]>25){
 }
 while(SensorValue[fwdultrain]<25){
 	completeStop(1000);
-	pointTurn(60,-60,920);
+	pointTurn(-60,60,920);
 }
 completeStop(1000);
 goStraight(60,60);

@@ -26,4 +26,13 @@ while(SensorValue[sonarin]<15){
 while(SensorValue[sonarin]>20){
 	motor[leftmotor]=70;
 	motor[rightmotor]=60;}
+
+
+while(SensorValue[sonarleft]>20)
+motor[rightmotor]=-60;
+motor[leftmotor]=70;
+
+ while(SensorValue[sonarleft]>20)
+motor[rightmotor]=-60;
+motor[leftmotor]=70;
 }

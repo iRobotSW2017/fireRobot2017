@@ -27,42 +27,90 @@ void pointTurn (int leftspeed, int rightspeed, int delaytime){
 	wait1Msec(delaytime); // continue to reach the desired degree by seconds
 }
 
+/*added by Qian for more precise turn */
+void runStop (int delaytime){
+	wait1Msec(delaytime); //this stops rabot for a delay of time
+	motor[rightMotor] = 0;
+	motor[leftMotor] = 0;
+}
+
+void encoderReset(){
+		//Clear the encoders associated with the left and right motors
+		resetMotorEncoder(leftMotor);
+		resetMotorEncoder(rightMotor);
+}
+
+void turnRight(int degrees, int speed){
+	//fully stop engine
+	runStop(0);
+	//Reset encoders
+	encoderReset();
+
+  //Determine tickGoal
+  int tickGoal = (37 * degrees) / 10;	//38
+
+  //Perform a point turn to the left. We will use lower power values for more accuracy.
+  //default 40
+  motor[leftMotor] = speed;
+  motor[rightMotor] = -1*speed; // turn right
+
+  //Since the wheels may go at slightly different speeds due to manufacturing tolerances, etc.,
+  //we need to test both encoders and control both motors separately. This may result in one motor
+  //going for longer than another but it will ultimately result in a much more accurate turn.
+  while(nMotorEncoder[leftMotor] < tickGoal || nMotorEncoder[rightMotor] > -1*tickGoal) {
+    if(nMotorEncoder[leftMotor] > tickGoal) {motor[leftMotor] = 0;}
+    if(nMotorEncoder[rightMotor] < -1*tickGoal) {motor[rightMotor] = 0;}
+  }
+
+	//turn completed, fully stop engine
+	runStop(0);
+}
+/*added by Qian for more precise turn */
+
 task main()
 {
 
 		int comSpd = 90;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
-		//int frontSpace = 12; //(46-30)/2
+		int frontSpace = 30; //(46-30)/2
 		int rightSpace = 30;
 
-		//wait to have a full stop
+		SensorValue[redLed] = 1; //make sure RED-LED is off
+		//delay to start
 		wait1Msec(2000);
 
 		//Right motor is better to use than fwd motor because of different interferences
-		while(SensorValue[rightUltra]<rightSpace){
-			goStraight(comSpd, comSpd);	//speed is debateable
+		encoderReset();
+		while(SensorValue[rightUltra] < rightSpace){
+			goStraight((comSpd+2), comSpd);	//speed is debatable
 		}
-		completeStop(1000); // have robot stop @ the middle of hallway
+		SensorValue[redLed] = 0; //make sure RED-LED is off
+		//completeStop(1000); // have robot stop @ the middle of hallway
 
 		//allow the robot to move a little more, position @ the center of intersection
-		goStraight(comSpd, comSpd);
+		encoderReset();
+		goStraight(comSpd/2, comSpd/2);
 		wait1Msec(450);
-		completeStop(5000);
+		SensorValue[redLed] = 1; //make sure RED-LED is off
+		completeStop(2000);
 
 		//make 90 turn, going to room#1 direction
-		pointTurn(comSpd, -1*comSpd, 1000);	//turn to the room so we can almost enter.
+		//encoderReset();
+		//pointTurn(comSpd, -1*comSpd, 885);	//turn to the room so we can almost enter.
+		turnRight(90, 40);
 
 		//allow te robot to move forward
-		while(SensorValue[frontUltra]>25){
+		encoderReset();
+		while(SensorValue[frontUltra] > frontSpace){
 			goStraight(comSpd, comSpd);
 		}
+		completeStop(0);
+		//goStraight(comSpd/2, comSpd/2);
 		//move close to the wall, and stop, so the robot can stop on the middle of entry
-		while(SensorValue[frontUltra]<25){  //when there is no space ahead
-			completeStop(1000);	//???
-		}
+		//runStop(2000);	//???
 
-		pointTurn(comSpd, -1*comSpd, 860);//turn into the room 90@Rright turn
+		/*pointTurn(comSpd, -1*comSpd, 860);//turn into the room 90@Rright turn
 		completeStop(1000);
 
 		//drive into the roiom
@@ -92,6 +140,6 @@ task main()
 
 		goStraight(comSpd, comSpd);// move to center of the hallways
 		wait1Msec(1500);
-
+*/
 
 }

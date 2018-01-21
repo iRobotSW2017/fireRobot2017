@@ -74,6 +74,7 @@ task main()
 	completeStop(delaySec);
 	SensorValue[redLed] = 1; //indicate open turn
 
+	wait1Msec(2000);
 	// make a 90 degree right turn
 	turnRight(90, 40);
 	//SensorValue[redLed] = 1; //indicate turn finish

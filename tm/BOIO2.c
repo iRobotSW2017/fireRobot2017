@@ -84,6 +84,8 @@ task main()
 		int rightSpace = 30;
 
 		int nBatteryLevel = nImmediateBatteryLevel; //read battery level
+		writeDebugStreamLine("battery level %d", nBatteryLevel);
+
 		SensorValue[redLed] = 1; //make sure RED-LED is off
 		//delay to start
 		wait1Msec(2000);
@@ -131,11 +133,14 @@ task main()
 
 		//180 degree turn
 		turnRight(180, 40);//turn into the room 90@Rright turn
-		completeStop(1000);
+		completeStop(1500);
 
 		//leave the room
-		while(SensorValue[frontUltra] > 20){
+		while(SensorValue[frontUltra] > 40){
 			goStraight((lowAdjSpd+10), (comAdjSpd+10));
+		}
+		while(SensorValue[frontUltra] > 20){
+			goStraight(lowAdjSpd, comAdjSpd);
 		}
 		runStop(500);	//stop close to wall
 		completeStop(1000);

@@ -69,6 +69,31 @@ void turnRight(int degrees, int speed){
 	//turn completed, fully stop engine
 	runStop(0);
 }
+
+void turnLeft(int degrees, int speed){
+	//fully stop engine
+	runStop(0);
+	//Reset encoders
+	encoderReset();
+ 
+  //Determine tickGoal
+  int tickGoal = (52 * degrees) / 10;
+ 
+  //Start the motors in a left point turn.
+  motor[leftMotor] = -1 * speed;
+  motor[rightMotor] = speed;
+ 
+  //Since the wheels may go at slightly different speeds due to manufacturing tolerances, etc., 
+  //we need to test both encoders and control both motors separately. This may result in one motor
+  //going for longer than another but it will ultimately result in a much more accurate turn.
+  while(nMotorEncoder[rightMotor] < tickGoal || nMotorEncoder[leftMotor] > -1 * tickGoal) {
+    if(nMotorEncoder[rightMotor] > tickGoal) {motor[rightMotor] = 0;}
+    if(nMotorEncoder[leftMotor] < -1 * tickGoal) {motor[leftMotor] = 0;}
+  }
+	//turn completed, fully stop engine
+	runStop(0);
+}
+
 /*added by Qian for more precise turn */
 
 task main()
@@ -145,12 +170,15 @@ task main()
 		runStop(500);	//stop close to wall
 		completeStop(1000);
 
-/*		//make 90 left turn
-		pointTurn(-comSpd, comSpd, 860);
+		//make 90 left turn
+		turnLeft(90, 40);
 		completeStop(1000);
 
-		goStraight(comSpd, comSpd);// move to center of the hallways
-		wait1Msec(1500);
-*/
+		//Right motor is better to use than fwd motor because of different interferences
+		encoderReset();
+		while(SensorValue[rightUltra] < rightSpace){
+			goStraight(lowSpd, comSpd);	//speed is debatable
+		}
+
 
 }

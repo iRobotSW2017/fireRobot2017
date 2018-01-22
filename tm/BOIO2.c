@@ -83,6 +83,7 @@ task main()
 		int frontSpace = 30; //(46-30)/2
 		int rightSpace = 30;
 
+		int nBatteryLevel = nImmediateBatteryLevel; //read battery level
 		SensorValue[redLed] = 1; //make sure RED-LED is off
 		//delay to start
 		wait1Msec(2000);
@@ -100,7 +101,7 @@ task main()
 		goStraight(lowAdjSpd, comAdjSpd);
 		runStop(500);
 		SensorValue[redLed] = 1; //make sure RED-LED is off
-		completeStop(2000); // to make sure a full stop
+		completeStop(1500); // to make sure a full stop
 
 		//make 90 turn, going to room#1 direction
 		turnRight(90, 40);
@@ -112,36 +113,34 @@ task main()
 		}
 		completeStop(0);
 
-		goStraight(lowAdjSpd, comAdjSpd);
 		//move close to the wall, and stop, so the robot can stop on the middle of entry
+		encoderReset();
+		goStraight(lowAdjSpd, comAdjSpd);
 		runStop(400);	//???
-		completeStop(2000); // to make sure a full stop
+		completeStop(1500); // to make sure a full stop
 
-		turnRight(90, 40);//turn into the room 90@Rright turn
+		turnRight(93, 40);//turn into the room 90@Rright turn
 		completeStop(1000);
 
-/*		//drive into the roiom
-		while(SensorValue[frontUltra]>30){
-			goStraight(comSpd, comSpd);  //Walk straight
+		//drive into the room
+		encoderReset();
+		while(SensorValue[frontUltra] > (frontSpace+5)){
+			goStraight((lowAdjSpd+10), (comAdjSpd+10));
 		}
-		//stop close to 30cm
-		if(SensorValue[frontUltra]<35){
-			completeStop(1000);
-		}
+		runStop(500);	//stop close to 30cm
 
 		//180 degree turn
-		pointTurn(comSpd, -1*comSpd, 1750);
+		turnRight(180, 40);//turn into the room 90@Rright turn
 		completeStop(1000);
 
 		//leave the room
-		while(SensorValue[frontUltra]>25){
-			goStraight(comSpd, comSpd);
+		while(SensorValue[frontUltra] > 20){
+			goStraight((lowAdjSpd+10), (comAdjSpd+10));
 		}
-		if(SensorValue[frontUltra]<25){
-			completeStop(1000);//exit the room
-		}
+		runStop(500);	//stop close to wall
+		completeStop(1000);
 
-		//make 90 left turn
+/*		//make 90 left turn
 		pointTurn(-comSpd, comSpd, 860);
 		completeStop(1000);
 

@@ -75,15 +75,15 @@ void turnLeft(int degrees, int speed){
 	runStop(0);
 	//Reset encoders
 	encoderReset();
- 
+
   //Determine tickGoal
-  int tickGoal = (52 * degrees) / 10;
- 
+  int tickGoal = (45 * degrees) / 10;
+
   //Start the motors in a left point turn.
   motor[leftMotor] = -1 * speed;
   motor[rightMotor] = speed;
- 
-  //Since the wheels may go at slightly different speeds due to manufacturing tolerances, etc., 
+
+  //Since the wheels may go at slightly different speeds due to manufacturing tolerances, etc.,
   //we need to test both encoders and control both motors separately. This may result in one motor
   //going for longer than another but it will ultimately result in a much more accurate turn.
   while(nMotorEncoder[rightMotor] < tickGoal || nMotorEncoder[leftMotor] > -1 * tickGoal) {
@@ -108,7 +108,7 @@ task main()
 		int frontSpace = 30; //(46-30)/2
 		int rightSpace = 30;
 
-		int nBatteryLevel = nImmediateBatteryLevel; //read battery level
+		int nBatteryLevel = nImmediateBatteryLevel; //read battery level -- 8687 full
 		writeDebugStreamLine("battery level %d", nBatteryLevel);
 
 		SensorValue[redLed] = 1; //make sure RED-LED is off
@@ -146,7 +146,7 @@ task main()
 		runStop(400);	//???
 		completeStop(1500); // to make sure a full stop
 
-		turnRight(93, 40);//turn into the room 90@Rright turn
+		turnRight(92, 40);//turn into the room 90@Rright turn
 		completeStop(1000);
 
 		//drive into the room
@@ -158,7 +158,7 @@ task main()
 
 		//180 degree turn
 		turnRight(180, 40);//turn into the room 90@Rright turn
-		completeStop(1500);
+		completeStop(1000);
 
 		//leave the room
 		while(SensorValue[frontUltra] > 40){
@@ -179,6 +179,7 @@ task main()
 		while(SensorValue[rightUltra] < rightSpace){
 			goStraight(lowSpd, comSpd);	//speed is debatable
 		}
+		runStop(50);
 
 
 }

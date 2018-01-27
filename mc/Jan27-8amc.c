@@ -26,7 +26,7 @@ void turnRight(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (51* degrees)/10;
+	int tickGoal = (68* degrees)/10;
 
 	motor[leftMotor]=speed;
 	motor[rightMotor]=-1*speed;
@@ -47,7 +47,7 @@ void turnLeft(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (45* degrees)/10;
+	int tickGoal = (60* degrees)/10;
 
 	motor[leftMotor]=-1*speed;
 	motor[rightMotor]=speed;
@@ -128,6 +128,41 @@ task main()
 
 		goStraight(comSpd, comSpd);// move to center of the hallways
 		wait1Msec(1500);
+		completeStop(1000);
+
+		//Room 3
+
+		turnRight(90,60);
+		completeStop(1000);
+		while(SensorValue[rightUltra]>20){
+			goStraight(comSpd, comSpd);
+		}
+		completeStop(1000);
+		while(SensorValue[rightUltra]<20){
+			goStraight(comSpd, comSpd);
+		}
+		completeStop(1000);
+		turnRight(90,60);
+		completeStop(1000);
+		while(SensorValue[frontUltra]>26){
+			goStraight(comSpd, comSpd);
+		}
+		completeStop(1000);
+		turnRight(180,60);
+		completeStop(1000);
+
+		//Room 4
+
+		while(SensorValue[frontUltra]>35){
+			goStraight(comSpd,comSpd);
+		}
+		completeStop(1000);
+		turnLeft(180,60);
+		completeStop(1000);
+		turnRight(180,60);
+
+		//Room 2
+
 
 
 

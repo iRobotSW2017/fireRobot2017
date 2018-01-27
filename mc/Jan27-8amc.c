@@ -91,11 +91,10 @@ task main()
 		turnRight(90, 60);//turn to the room so we can almost enter.
 
 		//allow the robot to move forward
-		while(SensorValue[frontUltra]>15){
+		while(SensorValue[frontUltra]>10){
 			goStraight(leftcomSpd, comSpd);
 		}
 		//move close to the wall, and stop, so the robot can stop on the middle of entry
-
 			completeStop(1000);	//???
 
 		turnRight(90, 60);//turn to the room so we can almost enter.
@@ -106,8 +105,8 @@ task main()
 			goStraight(leftcomSpd, comSpd);  //Walk straight
 		}
 		//stop close to 30cm
+			completeStop(1000);
 
-		completeStop(1000);
 
 		//180 degree turn
 		turnRight(180, 60);//turn to the room so we can almost enter.
@@ -117,8 +116,9 @@ task main()
 		while(SensorValue[frontUltra]>25){
 			goStraight(leftcomSpd, comSpd);
 		}
-		completeStop(1000);//exit the room
-
+		if(SensorValue[frontUltra]<25){
+			completeStop(1000);//exit the room
+		}
 
 		//make 90 left turn
 		turnLeft(90, 60);//turn to the room so we can almost enter.
@@ -126,6 +126,41 @@ task main()
 
 		goStraight(leftcomSpd, comSpd);// move to center of the hallways
 		wait1Msec(1500);
+		completeStop(1000);
+
+		//Room 3
+
+		turnRight(90,60);
+		completeStop(1000);
+		while(SensorValue[rightUltra]>20){
+			goStraight(leftcomSpd, comSpd);
+		}
+		completeStop(1000);
+		while(SensorValue[rightUltra]<20){
+			goStraight(leftcomSpd, comSpd);
+		}
+		completeStop(1000);
+		turnRight(90,60);
+		completeStop(1000);
+		while(SensorValue[frontUltra]>26){
+			goStraight(leftcomSpd, comSpd);
+		}
+		completeStop(1000);
+		turnRight(180,60);
+		completeStop(1000);
+
+		//Room 4
+
+		while(SensorValue[frontUltra]>35){
+			goStraight(leftcomSpd,comSpd);
+		}
+		completeStop(1000);
+		turnLeft(180,60);
+		completeStop(1000);
+		turnRight(180,60);
+
+		//Room 2
+
 
 
 

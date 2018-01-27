@@ -28,6 +28,6 @@ task main()
 		wait1Msec(2000);
 
 		//make 90 turn, going to room#1 direction
-		pointTurn(comSpd, -1*comSpd, 1000);//turn to the room so we can almost enter.
+		pointTurn(comSpd, -1*comSpd, 900);//turn to the room so we can almost enter.
 
 }

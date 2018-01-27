@@ -39,7 +39,7 @@ void turnRight(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (68* degrees)/10;
+	int tickGoal = (73* degrees)/10;
 
 	motor[leftMotor]=speed;
 	motor[rightMotor]=-1*speed;
@@ -104,10 +104,22 @@ task main()
 		turnRight(90, 60);//turn to the room so we can almost enter.
 
 		//allow the robot to move forward
+
+		completeStop(1000);
+
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(1500);
+		completeStop(500);
+
+		while(SensorValue[rightUltra]<rightSpace){
+			walkStraight(lowSpd, comSpd);
+		}
+
+		completeStop(1000);
+
 		while(SensorValue[frontUltra]>15){
 			walkStraight(lowSpd, comSpd);
 		}
-		//move close to the wall, and stop, so the robot can stop on the middle of entry
 
 		completeStop(1000);
 

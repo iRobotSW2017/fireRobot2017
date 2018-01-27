@@ -26,7 +26,7 @@ void turnRight(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (68* degrees)/10;
+	int tickGoal = (70* degrees)/10;
 
 	motor[leftMotor]=speed;
 	motor[rightMotor]=-1*speed;
@@ -47,7 +47,7 @@ void turnLeft(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (60* degrees)/10;
+	int tickGoal = (62* degrees)/10;
 
 	motor[leftMotor]=-1*speed;
 	motor[rightMotor]=speed;
@@ -67,6 +67,7 @@ task main()
 {
 
 		int comSpd = 60;
+		int leftcomSpd = 70;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -77,38 +78,35 @@ task main()
 
 		//Right motor is better to use than fwd motor because of different interferences
 		while(SensorValue[rightUltra]<rightSpace){
-			goStraight(comSpd, comSpd);	//speed is debateable
+			goStraight(leftcomSpd, comSpd);	//speed is debateable
 		}
 		completeStop(1000); // have robot stop @ the middle of hallway
 
 		//allow the robot to move a little more, position @ the center of intersection
-		goStraight(comSpd, comSpd);
-		wait1Msec(100);
+		goStraight(leftcomSpd, comSpd);
+		wait1Msec(500);
 		completeStop(500);
 
 		//make 90 turn, going to room#1 direction
 		turnRight(90, 60);//turn to the room so we can almost enter.
 
 		//allow the robot to move forward
-		while(SensorValue[frontUltra]>25){
-			goStraight(comSpd, comSpd);
+		while(SensorValue[frontUltra]>10){
+			goStraight(leftcomSpd, comSpd);
 		}
 		//move close to the wall, and stop, so the robot can stop on the middle of entry
-		while(SensorValue[frontUltra]<25){  //when there is no space ahead
 			completeStop(1000);	//???
-		}
 
 		turnRight(90, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		//drive into the roiom
 		while(SensorValue[frontUltra]>30){
-			goStraight(comSpd, comSpd);  //Walk straight
+			goStraight(leftcomSpd, comSpd);  //Walk straight
 		}
 		//stop close to 30cm
-		if(SensorValue[frontUltra]<35){
 			completeStop(1000);
-		}
+
 
 		//180 degree turn
 		turnRight(180, 60);//turn to the room so we can almost enter.
@@ -116,7 +114,7 @@ task main()
 
 		//leave the room
 		while(SensorValue[frontUltra]>25){
-			goStraight(comSpd, comSpd);
+			goStraight(leftcomSpd, comSpd);
 		}
 		if(SensorValue[frontUltra]<25){
 			completeStop(1000);//exit the room
@@ -126,7 +124,7 @@ task main()
 		turnLeft(90, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
-		goStraight(comSpd, comSpd);// move to center of the hallways
+		goStraight(leftcomSpd, comSpd);// move to center of the hallways
 		wait1Msec(1500);
 		completeStop(1000);
 
@@ -135,17 +133,17 @@ task main()
 		turnRight(90,60);
 		completeStop(1000);
 		while(SensorValue[rightUltra]>20){
-			goStraight(comSpd, comSpd);
+			goStraight(leftcomSpd, comSpd);
 		}
 		completeStop(1000);
 		while(SensorValue[rightUltra]<20){
-			goStraight(comSpd, comSpd);
+			goStraight(leftcomSpd, comSpd);
 		}
 		completeStop(1000);
 		turnRight(90,60);
 		completeStop(1000);
 		while(SensorValue[frontUltra]>26){
-			goStraight(comSpd, comSpd);
+			goStraight(leftcomSpd, comSpd);
 		}
 		completeStop(1000);
 		turnRight(180,60);
@@ -154,7 +152,7 @@ task main()
 		//Room 4
 
 		while(SensorValue[frontUltra]>35){
-			goStraight(comSpd,comSpd);
+			goStraight(leftcomSpd,comSpd);
 		}
 		completeStop(1000);
 		turnLeft(180,60);

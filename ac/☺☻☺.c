@@ -164,6 +164,67 @@ task main()
 		walkStraight(lowSpd, comSpd);// move to center of the hallways
 		wait1Msec(1500);
 
+		//Room 3
+
+		turnRight(90,60);
 		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[rightUltra]>20){
+			walkStraight(lowSpd, comSpd);
+		}
+
+		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[rightUltra]<20){
+			walkStraight(lowSpd, comSpd);
+		}
+
+		completeStop(1000);
+
+		turnRight(90,60);
+
+		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>20){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
+		turnRight(170,60);
+		completeStop(1000);
+
+		//Room 4
+
+		while(SensorValue[frontUltra]>35){
+			walkStraight(lowSpd, comSpd);
+		}
+
+		completeStop(1000);
+		turnLeft(180,60);
+
+		completeStop(1000);
+		turnRight(170,60);
+
+		//Room 2
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>15){
+			walkStraight(lowSpd, comSpd);
+		}
+
+		completeStop(500);
+		turnLeft(90,60);
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>15){
+			walkStraight(lowSpd, comSpd);
+		}
+
+		completeStop(500);
+		turnLeft(90,60);
+
+		//?
 
 }

@@ -1,6 +1,6 @@
 #pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, dgtl3,  frontUltra,     sensorSONAR_cm)
-#pragma config(Sensor, dgtl5,  leftUltra,      sensorSONAR_raw)
+#pragma config(Sensor, dgtl5,  leftUltra,      sensorSONAR_cm)
 #pragma config(Sensor, dgtl7,  rightUltra,     sensorSONAR_cm)
 #pragma config(Sensor, dgtl12, redLed,         sensorDigitalOut)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )

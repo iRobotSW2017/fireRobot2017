@@ -12,17 +12,17 @@ void Pointturn(int leftSpeed, int rightSpeed, int waittime){
 
 task main()
 {
-wait1Msec(1000);
-while (SensorValue(ultrain)>20){
-	motor(rightmotor) = 53;
-	motor(leftmotor) = 63;
-}
-motor(rightmotor) = 0;
-motor(leftmotor) = 0;
-wait1Msec(1000);
-Pointturn(120, -120, 1000);
-motor(rightmotor) = 0;
-motor(leftmotor) = 0;
+	wait1Msec(1000);
+	while (SensorValue(ultrain)>20){
+		motor(rightmotor) = 53;
+		motor(leftmotor) = 63;
+	}
+	motor(rightmotor) = 0;
+	motor(leftmotor) = 0;
+	wait1Msec(1000);
+	Pointturn(120, -120, 1000);
+	motor(rightmotor) = 0;
+	motor(leftmotor) = 0;
 
 
 }

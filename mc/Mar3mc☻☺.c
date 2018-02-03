@@ -59,7 +59,7 @@ void turnLeft(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (68* degrees)/10;
+	int tickGoal = (60 degrees)/10;
 
 	motor[leftMotor]=-1*speed;
 	motor[rightMotor]=speed;
@@ -108,7 +108,7 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
-		wait1Msec(200);
+		wait1Msec(500);
 		completeStop(500);
 
 		//make 90 turn, going to room#1 direction

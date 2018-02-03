@@ -1,4 +1,5 @@
 #pragma config(I2C_Usage, I2C1, i2cSensors)
+#pragma config(Sensor, dgtl9,  Bumpey,         sensorTouch)
 #pragma config(Sensor, dgtl3,  frontUltra,     sensorSONAR_cm)
 #pragma config(Sensor, dgtl5,  leftUltra,      sensorSONAR_cm)
 #pragma config(Sensor, dgtl7,  rightUltra,     sensorSONAR_cm)
@@ -77,6 +78,18 @@ void turnLeft(int degrees, int speed){
 
 task main()
 {
+	while(SensorValue[Bumpey]==0){
+	motor[leftMotor]=0;
+	motor[rightMotor]=0;
+}
+
+while(SensorValue[Bumpey]==0){
+	motor[leftMotor]=63;
+	motor[rightMotor]=63;
+}
+
+motor[leftMotor]=0;
+motor[rightMotor]=0;
 
 		int comSpd = 63;
 		int lowSpd = 40;

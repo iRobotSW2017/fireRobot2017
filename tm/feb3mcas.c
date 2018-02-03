@@ -128,12 +128,11 @@ task main()
 		completeStop(1000);
 
 		resetEncoders();
-		while(SensorValue[frontUltra]>20){
+		while(SensorValue[frontUltra]>15){
 			walkStraight(lowSpd, comSpd);
 		}
-		completeStop(1000);
+		completeStop(0);
 
-/*
 		turnRight(92, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
@@ -167,5 +166,5 @@ task main()
 
 
 		completeStop(1000);
-	*/
+
 }

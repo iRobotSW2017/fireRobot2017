@@ -136,14 +136,9 @@ task main()
 		turnRight(90, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
-<<<<<<< HEAD
-		//drive into the room
-		while(SensorValue[frontUltra]>15){
-=======
 		//drive into the roiom
 		resetEncoders();
 		while(SensorValue[frontUltra]>28){
->>>>>>> 54632e4a81cd31cf6c1aa97bdb37fc0392b6b89a
 			walkStraight(lowSpd, comSpd);  //Walk straight
 		}
 		completeStop(1000);	//stop close to 30cm
@@ -169,40 +164,67 @@ task main()
 		walkStraight(lowSpd, comSpd);// move to center of the hallways
 		wait1Msec(1500);
 
-<<<<<<< HEAD
 		//Room 3
 
 		turnRight(90,60);
 		completeStop(1000);
+
+		resetEncoders();
 		while(SensorValue[rightUltra]>20){
 			walkStraight(lowSpd, comSpd);
 		}
+
 		completeStop(1000);
+
+		resetEncoders();
 		while(SensorValue[rightUltra]<20){
 			walkStraight(lowSpd, comSpd);
 		}
+
 		completeStop(1000);
+
 		turnRight(90,60);
+
 		completeStop(1000);
-		while(SensorValue[frontUltra]>26){
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>20){
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(1000);
-		turnRight(180,60);
+		turnRight(170,60);
 		completeStop(1000);
 
 		//Room 4
 
 		while(SensorValue[frontUltra]>35){
-			walkStraight(lowSpd,comSpd);
+			walkStraight(lowSpd, comSpd);
 		}
+
 		completeStop(1000);
 		turnLeft(180,60);
+
 		completeStop(1000);
-		turnRight(180,60);
-=======
-		completeStop(1000);
->>>>>>> 54632e4a81cd31cf6c1aa97bdb37fc0392b6b89a
+		turnRight(170,60);
 
 		//Room 2
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>15){
+			walkStraight(lowSpd, comSpd);
+		}
+
+		completeStop(500);
+		turnLeft(90,60);
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>15){
+			walkStraight(lowSpd, comSpd);
+		}
+
+		completeStop(500);
+		turnLeft(90,60);
+
+		//?
+
 }

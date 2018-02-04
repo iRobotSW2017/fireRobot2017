@@ -38,7 +38,7 @@ void turnRight(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (73 * degrees)/10;
+	int tickGoal = (74 * degrees)/10;	//increased the tick goal by 1 today by mattyboio
 
 	motor[leftMotor]=speed;
 	motor[rightMotor]=-1*speed;
@@ -96,7 +96,7 @@ task main()
 			motor[rightMotor]=0;
 		}
 		wait1Msec(500);
-
+/*
 		//start room#1 -----
 		//Right motor is better to use than fwd motor because of different interferences
 		resetEncoders();
@@ -181,6 +181,7 @@ task main()
 		turnRight(90, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
+
 		//allow the robot to move forward
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
@@ -209,19 +210,27 @@ task main()
 		}
 		completeStop(1000);	//stop close to 30cm
 
-		turnRight(175, 60);	//scan the room
+		turnRight(180, 60);	//scan the room
 		completeStop(1000);
 
 		// return to the hallway
 		resetEncoders();
-		while(SensorValue[leftUltra]<150){
+		while(SensorValue[leftUltra]<100){
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(1000);
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(200);
+		completeStop(500);
+
 
 		// end of room#3
-
-		/*
+*/
+		while(SensorValue[frontUltra]>65){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
 		turnLeft(175, 60);//turn away from the room so we can exit to main hallwaie.
 		completeStop(1000);
 		resetEncoders();
@@ -229,5 +238,5 @@ task main()
 		while(SensorValue[rightUltra]<100){
 			walkStraight(lowSpd, comSpd);
 		}
-		completeStop(1000)*/
+		completeStop(1000);
 }

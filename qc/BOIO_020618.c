@@ -38,7 +38,7 @@ void turnRight(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (58 * degrees)/10;	//increased the tick goal by 1 today by mattyboio == 74@matt
+	int tickGoal = (60 * degrees)/10;	//increased the tick goal by 1 today by mattyboio == 74@matt
 
 	motor[leftMotor]=speed;
 	motor[rightMotor]=-1*speed;
@@ -59,7 +59,7 @@ void turnLeft(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (56 * degrees)/10;	//72@Matt
+	int tickGoal = (57 * degrees)/10;	//72@Matt
 
 	motor[leftMotor]=-1*speed;
 	motor[rightMotor]=speed;
@@ -161,7 +161,7 @@ task main()
 		completeStop(0);
 		// @ hallway
 		resetEncoders();
-		while(SensorValue[frontUltra]>30){
+		while(SensorValue[frontUltra]>20){
 				walkStraight(lowSpd, comSpd);
 		}
 		completeStop(1000);//exit the room
@@ -220,7 +220,7 @@ task main()
 		wait1Msec(1000);
 		// enter room#3
 		resetEncoders();
-		while(SensorValue[frontUltra]>28){
+		while(SensorValue[frontUltra]>20){
 			walkStraight(lowSpd, comSpd);  //Walk straight
 		}
 		completeStop(1000);	//stop close to 30cm
@@ -234,7 +234,7 @@ task main()
 		while(SensorValue[leftUltra]<100){
 			walkStraight(lowSpd, comSpd);
 		}
-		completeStop(1000);
+		completeStop(500);
 		// exit room#3
 		// stop @ hallway
 		resetEncoders();
@@ -249,7 +249,7 @@ task main()
 		//allow the robot to move forward, to reduce ultrasonic noise
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
-		wait1Msec(1000);
+		wait1Msec(1500);
 		resetEncoders();
 		while(SensorValue[frontUltra] > 50){
 			walkStraight(lowSpd, comSpd);
@@ -264,12 +264,12 @@ task main()
 		while(SensorValue[rightUltra]<100){
 			walkStraight(lowSpd, comSpd);//get to main hallwaie
 		}
-		completeStop(1000);
+		completeStop(0);
 
 		//allow the robot to move forward, to reduce ultrasonic noise
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
-		wait1Msec(500);
+		wait1Msec(450);
 		completeStop(1000);
 
 		turnRight(90, 60);	//turn to start pointe

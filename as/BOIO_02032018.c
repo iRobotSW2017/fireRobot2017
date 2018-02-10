@@ -157,38 +157,14 @@ task main()
 
 
 		//make 90 left turn
-		turnLeft(90,60);//t
-		urn to the room so we can almost enter.
+		turnLeft(90, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);// move to center of the hallways
 		wait1Msec(1500);
 
+
 		completeStop(1000);
 
-		turnRight(90,60);
-
-		while(SensorValue[frontUltra]>20){
-			walkStraight(lowSpd, comSpd);
-		}
-
-		while(SensorValue[frontUltra]<20){
-			wait1Msec(1000);
-			turnRight(90,60);
-		}
-
-		while(SensorValue[frontUltra]>20){
-		 walkStraight(lowSpd,comSpd);
-		}
-		turnRight(170,60);
-
-		while(SensorValue[frontUltra]>20){
-			walkStraight(90,60);
-		}
-	//	completeStop(1000);
-
-	//	resetEncoders();
-
-	//	turnRight(170,60);
 }

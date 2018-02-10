@@ -146,6 +146,7 @@ void turnLeft(int degrees, int speed){
 
 task main()
 {
+		SensorValue[redLed] = 1; // turn off LED by default
 
 		//wait to have a full stop
 		while(SensorValue[Bumpey]==0){

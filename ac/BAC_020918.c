@@ -100,8 +100,8 @@ task main()
 
 		if(SensorValue[rightUltra]>2*rightSpace){
 			turnRight(90,60);
+			completeStop(500);
 		}
-		completeStop(500);
 
 		//start room#1 -----
 		//Right motor is better to use than fwd motor because of different interferences

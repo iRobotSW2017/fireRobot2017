@@ -198,7 +198,7 @@ task main()
 		wait1Msec(1000);
 		//drive into the room
 		resetEncoders();
-		while(SensorValue[frontUltra]>20){
+		while(SensorValue[frontUltra]>30){
 			walkStraight(lowSpd, comSpd);  //Walk straight
 		}
 		completeStop(1000);	//stop close to 30cm

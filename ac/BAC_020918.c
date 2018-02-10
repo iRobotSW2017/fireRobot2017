@@ -39,7 +39,7 @@ void turnRight(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (60 * degrees)/10;	//increased the tick goal by 1 today by mattyboio == 74@matt
+	int tickGoal = (58 * degrees)/10;	//increased the tick goal by 1 today by mattyboio == 74@matt
 
 	motor[leftMotor]=speed;
 	motor[rightMotor]=-1*speed;
@@ -60,7 +60,7 @@ void turnLeft(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (57 * degrees)/10;	//72@Matt
+	int tickGoal = (55 * degrees)/10;	//72@Matt
 
 	motor[leftMotor]=-1*speed;
 	motor[rightMotor]=speed;
@@ -97,6 +97,11 @@ task main()
 			motor[rightMotor]=0;
 		}
 		wait1Msec(500);
+
+		if(SensorValue[rightUltra]>2*rightSpace){
+			turnRight(90,60);
+		}
+		completeStop(500);
 
 		//start room#1 -----
 		//Right motor is better to use than fwd motor because of different interferences
@@ -270,7 +275,7 @@ task main()
 		//allow the robot to move forward, to reduce ultrasonic noise
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
-		wait1Msec(450);
+		wait1Msec(400);
 		completeStop(1000);
 
 		turnRight(90, 60);	//turn to start pointe
@@ -311,22 +316,28 @@ task main()
 		turnRight(90, 60);
 		completeStop(1000);//turn to roooom dos
 
-		while(SensorValue[frontUltra]>25){
+		while(SensorValue[frontUltra]>27){
 			walkStraight(lowSpd, comSpd);//go into the room
 		}
 		completeStop(1000);
 		turnRight(180, 60);
 		completeStop(1000);//180 degree scan
 
-		while(SensorValue[frontUltra]>25){
+		while(SensorValue[frontUltra]>18){
 			walkStraight(lowSpd, comSpd);//go out of the room
 		}
 		completeStop(1000);
-		turnRight(90, 60);//turn to final destination
+		turnLeft(90, 60);//turn to final destination
 		completeStop(1000);
 
 		while(SensorValue[frontUltra]>25){
 			walkStraight(lowSpd, comSpd);//go to final destination the room
 		}
+		//You get the bag and fumble it
+		//I get the bag and flip it and tumble it
+
+		//#2MuchMIGOS
+
+		//In the kitchen wrist twisting like its stir fry
 
 }

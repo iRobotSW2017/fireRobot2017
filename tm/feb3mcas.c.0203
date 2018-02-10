@@ -83,7 +83,7 @@ void resetEncoders(){
 task main()
 {
 
-		int comSpd = 63;// this is for quality control during a movement period
+		int comSpd = 63;
 		int lowSpd = 40;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
@@ -93,7 +93,7 @@ task main()
 		//wait to have a full stop
 		while(SensorValue[Bumpey]==0){
 			motor[leftMotor]=0;
-			motor[rightMotor]=0;//this is bumper switch to start delay
+			motor[rightMotor]=0;
 		}
 		wait1Msec(500);
 
@@ -129,7 +129,7 @@ task main()
 
 		resetEncoders();
 		while(SensorValue[frontUltra]>15){
-			walkStraight(lowSpd, comSpd);//get to end of hallway
+			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(0);
 

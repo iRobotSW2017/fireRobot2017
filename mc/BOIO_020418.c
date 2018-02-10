@@ -38,7 +38,7 @@ void turnRight(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (53* degrees)/10;
+	int tickGoal = (74 * degrees)/10;	//increased the tick goal by 1 today by mattyboio
 
 	motor[leftMotor]=speed;
 	motor[rightMotor]=-1*speed;
@@ -59,7 +59,7 @@ void turnLeft(int degrees, int speed){
 	nMotorEncoder[leftMotor]=0;
 	//you must reset the encoders
 
-	int tickGoal = (51* degrees)/10;
+	int tickGoal = (72 * degrees)/10;
 
 	motor[leftMotor]=-1*speed;
 	motor[rightMotor]=speed;
@@ -83,8 +83,8 @@ void resetEncoders(){
 task main()
 {
 
-		int comSpd = 63;// this is for quality control during a movement period
-		int lowSpd = 40;
+		int comSpd = 90;
+		int lowSpd = 70;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -93,10 +93,11 @@ task main()
 		//wait to have a full stop
 		while(SensorValue[Bumpey]==0){
 			motor[leftMotor]=0;
-			motor[rightMotor]=0;//this is bumper switch to start delay
+			motor[rightMotor]=0;
 		}
 		wait1Msec(500);
-
+/*
+		//start room#1 -----
 		//Right motor is better to use than fwd motor because of different interferences
 		resetEncoders();
 		while(SensorValue[rightUltra]<rightSpace){
@@ -108,7 +109,7 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
-		wait1Msec(200);
+		wait1Msec(500);
 		completeStop(500);
 
 		//make 90 turn, going to room#1 direction
@@ -118,8 +119,8 @@ task main()
 		//allow the robot to move forward
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
-		wait1Msec(800);
-		//completeStop(500);
+		wait1Msec(1000);
+	//	completeStop(500);
 
 		resetEncoders();
 		while(SensorValue[rightUltra]<rightSpace){
@@ -129,14 +130,14 @@ task main()
 
 		resetEncoders();
 		while(SensorValue[frontUltra]>15){
-			walkStraight(lowSpd, comSpd);//get to end of hallway
+			walkStraight(lowSpd, comSpd);
 		}
-		completeStop(0);
-
-		turnRight(92, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
-		//drive into the roiom
+		turnRight(90, 60);//turn to the room so we can almost enter.
+		completeStop(1000);
+
+		//drive into the room
 		resetEncoders();
 		while(SensorValue[frontUltra]>28){
 			walkStraight(lowSpd, comSpd);  //Walk straight
@@ -157,14 +158,142 @@ task main()
 
 
 		//make 90 left turn
-		turnLeft(90,60);//turn to the room so we can almost enter.
+		turnLeft(90, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		resetEncoders();
-		walkStraight(lowSpd, comSpd);// move to center of the hallways
-		wait1Msec(1500);
+		while(SensorValue[rightUltra]<rightSpace){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
 
+		//allow the robot to move a little more, position @ the center of intersection
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(500);
+		completeStop(500);
+
+		//end as finishing room#1
+		//if candle off should return to start point
+
+		//start room#3
+		//make 90 turn, going to room#1 direction
+		turnRight(90, 60);//turn to the room so we can almost enter.
+		completeStop(1000);
+
+
+		//allow the robot to move forward
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(1000);
+	//	completeStop(500);
+
+		resetEncoders();
+		while(SensorValue[rightUltra]<rightSpace){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>15){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
+
+		turnRight(90, 60);//turn to the room so we can almost enter.
+		completeStop(1000);
+
+		//drive into the room
+		resetEncoders();
+		while(SensorValue[frontUltra]>28){
+			walkStraight(lowSpd, comSpd);  //Walk straight
+		}
+		completeStop(1000);	//stop close to 30cm
+
+		turnRight(180, 60);	//scan the room
+		completeStop(1000);
+
+		// return to the hallway
+		resetEncoders();
+		while(SensorValue[leftUltra]<100){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(200);
+		completeStop(500);
+
+
+		// end of room#3
+*/
+		resetEncoders();
+		while(SensorValue[frontUltra]>65){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
+		turnLeft(175, 60);//turn away from the room so we can exit to main hallwaie.
+		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[rightUltra]<100){
+			walkStraight(lowSpd, comSpd);//get to main hallwaie
+		}
+		completeStop(1000);
+
+		turnRight(90, 60);	//turn to start pointe
+		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>20){
+			walkStraight(lowSpd, comSpd);//go to starte pointe
+		}
+		completeStop(1000);
+
+		//turn to the room 2 hallway
+		turnRight(90, 60);
+		completeStop(1000);
+
+		//hop a little
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(1000);
+		completeStop(500);
+
+		//usig right sensor to get to room2 gateway
+
+		resetEncoders();
+		while(SensorValue[rightUltra]<rightSpace){
+			walkStraight(lowSpd, comSpd);// go to opening of the roooom dos
+		}
 
 		completeStop(1000);
 
+		//hop a little to center in the room
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(200);
+		completeStop(500);
+
+		completeStop(1000);
+		turnRight(90, 60);
+		completeStop(1000);//turn to roooom dos
+
+		while(SensorValue[frontUltra]>25){
+			walkStraight(lowSpd, comSpd);//go into the room
+		}
+		completeStop(1000);
+		turnRight(180, 60);
+		completeStop(1000);//180 degree scan
+
+		while(SensorValue[frontUltra]>25){
+			walkStraight(lowSpd, comSpd);//go out of the room
+		}
+		completeStop(1000);
+		turnRight(90, 60);//turn to final destination
+		completeStop(1000);
+
+		while(SensorValue[frontUltra]>25){
+			walkStraight(lowSpd, comSpd);//go to final destination the room
+		}
 }

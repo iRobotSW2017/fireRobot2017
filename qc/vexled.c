@@ -4,6 +4,9 @@
 
 task main()
 {
+SensorValue[redLed] = 1;
+
+/*
 
 wait1Msec(1000);
 SensorValue[redLed] = 0;
@@ -13,7 +16,10 @@ wait1Msec(1000);
 SensorValue[redLed] = 0;
 wait1Msec(1000);
 SensorValue[redLed] = 1;
+wait1Msec(1000);
+SensorValue[redLed] = 0;
 
 SensorValue[fan] = 0;
+*/
 
 }

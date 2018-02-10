@@ -2,6 +2,7 @@
 #pragma config(Sensor, dgtl3,  frontUltra,     sensorSONAR_cm)
 #pragma config(Sensor, dgtl5,  leftUltra,      sensorSONAR_cm)
 #pragma config(Sensor, dgtl7,  rightUltra,     sensorSONAR_cm)
+#pragma config(Sensor, dgtl9,  Bumpey,         sensorTouch)
 #pragma config(Sensor, dgtl12, redLed,         sensorDigitalOut)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_2,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -12,24 +13,10 @@
 task main()
 {
 
-wait1Msec(5000);
-
-SensorValue[redLed] = 0;
-
-wait1Msec(5000);
-
-SensorValue[redLed] = 1;
-
-
-wait1Msec(5000);
-
-SensorValue[redLed] = 0;
-
-wait1Msec(5000);
-
-SensorValue[redLed] = 1;
-
-//SensorType[dgtl3] = sensorNone;
-//SensorType[dgtl7] = sensorNone;
+	while(true){
+		SensorType[dgtl3] = sensorSONAR_Ping_cm;
+		wait1Msec(5000);
+		SensorType[dgtl3] = sensorNone;
+	}
 
 }

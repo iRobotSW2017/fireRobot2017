@@ -20,7 +20,8 @@
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
 		int rightSpace = 23;
-		int flameDetected = 200;
+		int flameDetected = 250;
+		int flameTargetAdj = 8;
 		int flameOff = 66;
 		bool isFlameDetected = false;
 		bool isFlameOff = false;
@@ -62,7 +63,7 @@ void putOffFlame(){
 	if(isFlameDetected){
 		//move close if front > 30
 		resetEncoders();
-		while(SensorValue[frontUltra] > 30){
+		while(SensorValue[frontUltra] > 20){
 			walkStraight(_slowCloser, _slowCloser);
 		}
 		_moveClose = abs(nMotorEncoder[rightMotor]); //return encoder value for reverse purpose
@@ -120,7 +121,7 @@ int turnRight(int degrees, int speed, int offset, bool isDetecting){
 			motor[rightMotor]=0;
 		}
 	}
-	return -1;	//meaning turn is completed
+	return abs(nMotorEncoder[rightMotor]);	//meaning turn is completed
 }
 
 void turnLeft(int degrees, int speed){
@@ -206,9 +207,10 @@ task main()
 		// can we do it?!
 		int _ticks1 = turnRight(180, 60, 0, true);
 		if(isFlameDetected){
+			int _ticks2 = turnRight(flameTargetAdj, 60, 0, false); // give a degree adjust to target more straight
 			putOffFlame(); // put off flame
 			// how to finish the rest of turn
-			turnRight(180, 60, _ticks1, false);
+			turnRight(180, 60, (_ticks1+_ticks2), false);
 		}
 		completeStop(1000);
 

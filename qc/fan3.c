@@ -27,15 +27,9 @@ task main()
 		int _fanPower = 1;
 		while(true){
 					//writeDebugStreamLine("IR %d", SensorValue[IR_sensor]);
-					if(SensorValue[IR_sensor] > 100){
-						SensorValue[fan] = _fanPower;
+						SensorValue[fan] = 1;
 						writeDebugStreamLine("fan pwoer %d, %d", SensorValue[fan], _fanPower);
-						SensorValue[redLed] = 0;
 						wait1Msec(2000);
 						_fanPower += 100;
-					}else{
-						SensorValue[fan] = 0;
-						SensorValue[redLed] = 1;
-					}
 		}
 }

@@ -20,7 +20,7 @@
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
 		int rightSpace = 23;
-		int flameDetected = 250;
+		int flameDetected = 120;	//250
 		int flameTargetAdj = 8;
 		int flameOff = 66;
 		bool isFlameDetected = false;
@@ -63,7 +63,7 @@ void putOffFlame(){
 	if(isFlameDetected){
 		//move close if front > 30
 		resetEncoders();
-		while(SensorValue[frontUltra] > 20){
+		while(SensorValue[frontUltra] > 15){
 			walkStraight(_slowCloser, _slowCloser);
 		}
 		_moveClose = abs(nMotorEncoder[rightMotor]); //return encoder value for reverse purpose
@@ -95,8 +95,10 @@ void putOffFlame(){
  * scan clockwise, stop when flame is detected
  */
 int turnRight(int degrees, int speed, int offset, bool isDetecting){
-	resetEncoders();
+	int _flame0 = 0;
+
 	//you must reset the encoders
+	resetEncoders();
 
 	int tickGoal = ((rightTicks * degrees)/10 - offset);	//increased the tick goal by 1 today by mattyboio == 74@matt
 
@@ -106,13 +108,26 @@ int turnRight(int degrees, int speed, int offset, bool isDetecting){
 	while(nMotorEncoder[leftMotor]<tickGoal||nMotorEncoder[rightMotor]>-1*tickGoal){
 		if(isDetecting){
 			// flame is detected, stop motor, turn on LED, return ticks-run so far
-			if(SensorValue[IR_sensor] > flameDetected){
+			int _flameCurr = SensorValue[IR_sensor];
+			if( _flameCurr > flameDetected){	//start flame detect when fell heat
+				if(_flameCurr > _flame0){	// if hear is increasing, not facing straight yet
+					_flame0 = _flameCurr;
+				}else{	// only when heat starts to drop, just pass heat center
+					motor[leftMotor]=0;
+					motor[rightMotor]=0;
+					SensorValue[redLed] = 0;
+					isFlameDetected = true;
+					return abs(nMotorEncoder[rightMotor]);
+				}
+			}
+
+			/*if(SensorValue[IR_sensor] > flameDetected){
 				motor[leftMotor]=0;
 				motor[rightMotor]=0;
 				SensorValue[redLed] = 0;
 				isFlameDetected = true;
 				return abs(nMotorEncoder[rightMotor]);
-			}
+			}*/
 		}
 		if(nMotorEncoder[leftMotor]>tickGoal){
 			motor[leftMotor]=0;
@@ -207,7 +222,8 @@ task main()
 		// can we do it?!
 		int _ticks1 = turnRight(180, 60, 0, true);
 		if(isFlameDetected){
-			int _ticks2 = turnRight(flameTargetAdj, 60, 0, false); // give a degree adjust to target more straight
+			int _ticks2 = 0; // give a degree adjust to target more straight
+			//int _ticks2 = turnRight(flameTargetAdj, 60, 0, false); // give a degree adjust to target more straight
 			putOffFlame(); // put off flame
 			// how to finish the rest of turn
 			turnRight(180, 60, (_ticks1+_ticks2), false);

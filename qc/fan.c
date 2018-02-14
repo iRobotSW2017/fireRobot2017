@@ -4,6 +4,7 @@
 #pragma config(Sensor, dgtl7,  rightUltra,     sensorSONAR_cm)
 #pragma config(Sensor, dgtl9,  Bumpey,         sensorTouch)
 #pragma config(Sensor, dgtl10, fan,            sensorDigitalOut)
+#pragma config(Sensor, dgtl11, fan2,            sensorDigitalOut)
 #pragma config(Sensor, dgtl12, redLed,         sensorDigitalOut)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_2,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -24,17 +25,20 @@ task main()
 
 		SensorValue[redLed] = 1;
 		SensorValue[fan] = 0;
+		SensorValue[fan2] = 0;
 		int _fanPower = 1;
 		while(true){
 					//writeDebugStreamLine("IR %d", SensorValue[IR_sensor]);
 					if(SensorValue[IR_sensor] > 100){
 						SensorValue[fan] = _fanPower;
+						SensorValue[fan2] = 1;
 						writeDebugStreamLine("fan pwoer %d, %d", SensorValue[fan], _fanPower);
 						SensorValue[redLed] = 0;
 						wait1Msec(2000);
 						_fanPower += 100;
 					}else{
 						SensorValue[fan] = 0;
+						SensorValue[fan2] = 0;
 						SensorValue[redLed] = 1;
 					}
 		}

@@ -137,7 +137,6 @@ int right4flame(int degrees, int speed){
 
 /*
  * Turn right @ specified ticks
- */
 int turnRightTicks(int ticks2go, int speed){
 	//you must reset the encoders
 	resetEncoders();
@@ -155,6 +154,7 @@ int turnRightTicks(int ticks2go, int speed){
 	}
 	return abs(nMotorEncoder[rightMotor]);	//meaning turn is completed
 }
+ */
 
 /*
  * scan clockwise, stop when flame is detected
@@ -288,10 +288,11 @@ task main()
 		int _ticks1 = right4flame(180, 60);
 		completeStop(1000);
 		if(isFlameDetected){
-			turnLeft(180, 60);//turn to the room so we can almost enter.
+			turnLeft(180, 60); //back to start point
 			completeStop(1000);
 
-			int _ticks3 = turnRightTicks(_ticks1, 60);
+			//int _ticks3 = turnRightTicks(_ticks1, 60);
+			int _ticks3 = turnRight((_ticks1*10/rightTicks), 60, 0, false);
 			SensorValue[redLed] = 0; // turn on LED
 			putOffFlame(); // put off flame
 			// how to finish the rest of turn

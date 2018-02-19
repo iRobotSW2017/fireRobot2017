@@ -5,7 +5,6 @@
 #pragma config(Sensor, dgtl7,  rightUltra,     sensorSONAR_cm)
 #pragma config(Sensor, dgtl9,  Bumpey,         sensorTouch)
 #pragma config(Sensor, dgtl10, fan,            sensorDigitalOut)
-#pragma config(Sensor, dgtl11, relay,          sensorDigitalOut)
 #pragma config(Sensor, dgtl12, redLed,         sensorDigitalOut)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_2,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -20,17 +19,21 @@ task main()
 		}
 						SensorValue[fan] = 1;
 						*/
-
+		SensorValue[redLed] = 1;
 		wait1Msec(1000);
-		SensorValue[relay] = 0;
+		SensorValue[fan] = 0;
 		wait1Msec(5000);
-		SensorValue[relay] = 1;
+		SensorValue[redLed] = 0;
+		SensorValue[fan] = 1;
 		wait1Msec(5000);
-		SensorValue[relay] = 0;
+		SensorValue[redLed] = 1;
+		SensorValue[fan] = 0;
 		wait1Msec(5000);
-		SensorValue[relay] = 1;
+		SensorValue[redLed] = 0;
+		SensorValue[fan] = 1;
 		wait1Msec(5000);
-		SensorValue[relay] = 0;
+		SensorValue[redLed] = 1;
+		SensorValue[fan] = 0;
 
 
 }

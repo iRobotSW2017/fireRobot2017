@@ -5,7 +5,6 @@
 #pragma config(Sensor, dgtl7,  rightUltra,     sensorSONAR_cm)
 #pragma config(Sensor, dgtl9,  Bumpey,         sensorTouch)
 #pragma config(Sensor, dgtl10, fan,            sensorDigitalOut)
-#pragma config(Sensor, dgtl11, relay,          sensorDigitalOut)
 #pragma config(Sensor, dgtl12, redLed,         sensorDigitalOut)
 #pragma config(Sensor, I2C_1,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
 #pragma config(Sensor, I2C_2,  ,               sensorQuadEncoderOnI2CPort,    , AutoAssign )
@@ -75,10 +74,9 @@ void putOffFlame(){
 				writeDebugStreamLine("IR %d", SensorValue[IR_sensor]);
 				if(SensorValue[IR_sensor] > flameOff){
 					SensorValue[fan] = 1;	//start fan
-					SensorValue[fan2] = 1;	//start fan
+					wait1Msec(3000);
 				}else{
 					SensorValue[fan] = 0;	//off fan
-					SensorValue[fan2] = 0;	//start fan
 					wait1Msec(1000);
 					SensorValue[redLed] = 1;	//off LED
 					break;

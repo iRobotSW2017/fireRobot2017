@@ -153,33 +153,11 @@ int right4flame(int degrees, int speed){
 	return -1;	//meaning turn is completed
 }
 
-/*
- * Turn right @ specified ticks
-int turnRightTicks(int ticks2go, int speed){
-	//you must reset the encoders
-	resetEncoders();
-
-	motor[leftMotor]=speed;
-	motor[rightMotor]=-1*speed;
-
-	while(nMotorEncoder[leftMotor]<ticks2go||nMotorEncoder[rightMotor]>-1*ticks2go){
-		if(nMotorEncoder[leftMotor]>ticks2go){
-			motor[leftMotor]=0;
-		}
-		if(nMotorEncoder[rightMotor]<-1*ticks2go){
-			motor[rightMotor]=0;
-		}
-	}
-	return abs(nMotorEncoder[rightMotor]);	//meaning turn is completed
-}
- */
 
 /*
  * scan clockwise, stop when flame is detected
  */
-int turnRight(int degrees, int speed, int offset, bool isDetecting){
-	int _flame0 = 0;
-
+int turnRight(int degrees, int speed, int offset){
 	//you must reset the encoders
 	resetEncoders();
 
@@ -189,29 +167,6 @@ int turnRight(int degrees, int speed, int offset, bool isDetecting){
 	motor[rightMotor]=-1*speed;
 
 	while(nMotorEncoder[leftMotor]<tickGoal||nMotorEncoder[rightMotor]>-1*tickGoal){
-		if(isDetecting){
-			// flame is detected, stop motor, turn on LED, return ticks-run so far
-			int _flameCurr = SensorValue[IR_sensor];
-			if( _flameCurr > flameDetected){	//start flame detect when fell heat
-				if(_flameCurr > _flame0){	// if hear is increasing, not facing straight yet
-					_flame0 = _flameCurr;
-				}else{	// only when heat starts to drop, just pass heat center
-					motor[leftMotor]=0;
-					motor[rightMotor]=0;
-					SensorValue[redLed] = 0;
-					isFlameDetected = true;
-					return abs(nMotorEncoder[rightMotor]);
-				}
-			}
-
-			/*if(SensorValue[IR_sensor] > flameDetected){
-				motor[leftMotor]=0;
-				motor[rightMotor]=0;
-				SensorValue[redLed] = 0;
-				isFlameDetected = true;
-				return abs(nMotorEncoder[rightMotor]);
-			}*/
-		}
 		if(nMotorEncoder[leftMotor]>tickGoal){
 			motor[leftMotor]=0;
 		}
@@ -269,7 +224,7 @@ task main()
 		completeStop(500);
 
 		//make 90 turn, going to room#1 direction
-		turnRight(90, 60, 0, false);//turn to the room so we can almost enter.
+		turnRight(90, 60, 0);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		//allow the robot to move forward
@@ -288,7 +243,7 @@ task main()
 		}
 		completeStop(1500);
 
-		turnRight(90, 60, 0, false);	//turn to the room so we can almost enter.
+		turnRight(90, 60, 0);	//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		//push robot into room#1 to reduce front ultrasonic false reading
@@ -309,25 +264,12 @@ task main()
 			turnLeft(180, 60); //back to start point
 			completeStop(1000);
 
-			//int _ticks3 = turnRightTicks(_ticks1, 60);
-			int _ticks3 = turnRight((_ticks1*10/rightTicks), 60, 0, false);
+			int _ticks3 = turnRight((_ticks1*10/rightTicks), 60, 0);
 			SensorValue[redLed] = 0; // turn on LED
 			putOffFlame(); // put off flame
 			// how to finish the rest of turn
-			turnRight(180, 60, _ticks3, false);
+			turnRight(180, 60, _ticks3);
 		}
-
-		/*
-		// can we do it?!
-		int _ticks1 = turnRight(180, 60, 0, true);
-		if(isFlameDetected){
-			int _ticks2 = 0; // give a degree adjust to target more straight
-			//int _ticks2 = turnRight(flameTargetAdj, 60, 0, false); // give a degree adjust to target more straight
-			putOffFlame(); // put off flame
-			// how to finish the rest of turn
-			turnRight(180, 60, (_ticks1+_ticks2), false);
-		}
-		*/
 		completeStop(1000);
 
 		//leave the room

@@ -333,11 +333,6 @@ task main()
 		while(SensorValue[frontUltra]>25){
 			walkStraight(lowSpd, comSpd);//go to final destination the room
 		}
-		//You get the bag and fumble it
-		//I get the bag and flip it and tumble it
 
-		//#2MuchMIGOS
-
-		//In the kitchen wrist twisting like its stir fry
 
 }

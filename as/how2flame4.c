@@ -33,8 +33,7 @@ void _walkStraight(int lowSpeed, int CommonSpeed){
 			motor[leftMotor] = CommonSpeed;
 		}
 		if (nMotorEncoder[rightMotor] < abs(nMotorEncoder[leftMotor])){
-			motor[rightMotor] = CommonSpeed;
-			motor[leftMotor] = lowSpeed;
+			motor[rightMotor] = CommonSpeed; 	motor[leftMotor] = lowSpeed;
 		}
 		if (nMotorEncoder[rightMotor] == abs(nMotorEncoder[leftMotor])){
 			motor[rightMotor] = CommonSpeed;

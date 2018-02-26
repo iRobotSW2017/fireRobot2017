@@ -15,17 +15,19 @@
 //global variables
 		int comSpd = 90;
 		int lowSpd = 70;
-		int rightTicks = 62; //60
-		int leftTicks = 61;	//57
+		int rightTicks = 62;
+		int leftTicks = 61;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
 		int rightSpace = 23;
 		int flameDetected = 120;	//250
-		int flameTargetAdj = 13; //8
+		int flameTargetAdj = 13;
 		int flameOff = 100;
 		bool isFlameDetected = false;
 		bool isFlameOff = false;
+
+
 
 void _walkStraight(int lowSpeed, int CommonSpeed){
 		if ((nMotorEncoder[rightMotor]) > (abs(nMotorEncoder[leftMotor]))){
@@ -33,8 +35,7 @@ void _walkStraight(int lowSpeed, int CommonSpeed){
 			motor[leftMotor] = CommonSpeed;
 		}
 		if (nMotorEncoder[rightMotor] < abs(nMotorEncoder[leftMotor])){
-			motor[rightMotor] = CommonSpeed;
-			motor[leftMotor] = lowSpeed;
+			motor[rightMotor] = CommonSpeed; 	motor[leftMotor] = lowSpeed;
 		}
 		if (nMotorEncoder[rightMotor] == abs(nMotorEncoder[leftMotor])){
 			motor[rightMotor] = CommonSpeed;
@@ -91,7 +92,7 @@ void putOffFlame(){
 		completeStop(500);
 		//start fan until flame is off, & turn of LED
 		while(true){
-				//writeDebugStreamLine("IR %d", SensorValue[IR_sensor]);
+				writeDebugStreamLine("IR %d", SensorValue[IR_sensor]);
 				if(SensorValue[IR_sensor] > flameOff){
 					SensorValue[fan] = 1;	//start fan
 					wait1Msec(3000);
@@ -114,7 +115,7 @@ void putOffFlame(){
 }
 
 /*
- *
+ *scan clockwise, stop when flame is detected
  */
 int right4flame(int degrees, int speed){
 	int _flame0 = 0;
@@ -132,10 +133,9 @@ int right4flame(int degrees, int speed){
 			// flame is detected, stop motor, turn on LED, return ticks-run so far
 			int _flameCurr = SensorValue[IR_sensor];
 			if(_flameCurr > _flame0){	// if hear is increasing, not facing straight yet
-				//writeDebugStreamLine("flame level %d %d %d", _flame0, _flameCurr, _flameTicks);
+				writeDebugStreamLine("flame level %d %d %d", _flame0, _flameCurr, _flameTicks);
 				_flame0 = _flameCurr;
 				_flameTicks = abs(nMotorEncoder[rightMotor]);
-				writeDebugStreamLine("flame level %d %d", _flameCurr, _flameTicks);
 			}
 
 		if(nMotorEncoder[leftMotor]>tickGoal){
@@ -154,9 +154,48 @@ int right4flame(int degrees, int speed){
 	return -1;	//meaning turn is completed
 }
 
+int left4flame(int degrees, int speed){
+	int _flame0 = 0;
+	int _flameTicks = 0;
+
+	//you must reset the encoders
+	resetEncoders();
+
+	int tickGoal = ((rightTicks * degrees)/10);	//increased the tick goal by 1 today by mattyboio == 74@matt
+
+	motor[rightMotor]=speed;
+	motor[leftMotor]=-1*speed;
+
+	while(nMotorEncoder[rightMotor]<tickGoal||nMotorEncoder[leftMotor]>-1*tickGoal){
+			// flame is detected, stop motor, turn on LED, return ticks-run so far
+			int _flameCurr = SensorValue[IR_sensor];
+			if(_flameCurr > _flame0){	// if hear is increasing, not facing straight yet
+				writeDebugStreamLine("flame level %d %d %d", _flame0, _flameCurr, _flameTicks);
+				_flame0 = _flameCurr;
+				_flameTicks = abs(nMotorEncoder[rightMotor]);
+			}
+
+		if(nMotorEncoder[rightMotor]>tickGoal){
+			motor[rightMotor]=0;
+		}
+		if(nMotorEncoder[leftMotor]<-1*tickGoal){
+			motor[leftMotor]=0;
+		}
+	}
+
+	if(_flame0 > flameDetected){
+		isFlameDetected = true;
+		return _flameTicks;
+	}
+
+	return -1;	//meaning turn is completed
+}
+
+
+
 
 /*
- * scan clockwise, stop when flame is detected
+ * function for turn right
  */
 int turnRight(int degrees, int speed, int offset){
 	//you must reset the encoders
@@ -175,7 +214,8 @@ int turnRight(int degrees, int speed, int offset){
 			motor[rightMotor]=0;
 		}
 	}
-	return abs(nMotorEncoder[rightMotor]);	//meaning turn is completed
+	return abs(nMotorEncoder[rightMotor]);	//meaning turn is
+			walkStraight(lowSpd, comSpd);	//speed is debateablecompleted
 }
 
 void turnLeft(int degrees, int speed){
@@ -201,8 +241,8 @@ void turnLeft(int degrees, int speed){
 
 task main()
 {
-		SensorValue[redLed] = 1; // turn off LED by default
 
+		SensorValue[redLed] = 1; // Turn off LED
 		//wait to have a full stop
 		while(SensorValue[Bumpey]==0){
 			motor[leftMotor]=0;
@@ -210,13 +250,19 @@ task main()
 		}
 		wait1Msec(500);
 
+		if(SensorValue[rightUltra]>2*rightSpace){
+			turnRight(90,60,0);
+			completeStop(500);
+		}
+
 		//start room#1 -----
 		//Right motor is better to use than fwd motor because of different interferences
 		resetEncoders();
 		while(SensorValue[rightUltra]<rightSpace){
-			walkStraight(lowSpd, comSpd);	//speed is debateable
+		walkStraight(lowSpd,comSpd);
 		}
 		completeStop(1000); // have robot stop @ the middle of hallway
+
 
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
@@ -225,7 +271,7 @@ task main()
 		completeStop(500);
 
 		//make 90 turn, going to room#1 direction
-		turnRight(90, 60, 0);//turn to the room so we can almost enter.
+		turnRight(90,60,0);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		//allow the robot to move forward
@@ -244,8 +290,9 @@ task main()
 		}
 		completeStop(1500);
 
-		turnRight(90, 60, 0);	//turn to the room so we can almost enter.
+		turnRight(90,60,0);	//turn to the room so we can almost enter.
 		completeStop(1000);
+
 
 		//push robot into room#1 to reduce front ultrasonic false reading
 		resetEncoders();
@@ -253,13 +300,12 @@ task main()
 		wait1Msec(1000);
 		//drive into the room
 		resetEncoders();
-		while(SensorValue[frontUltra]>30){
+		while(SensorValue[frontUltra]>20){
 			walkStraight(lowSpd, comSpd);  //Walk straight
 		}
 		completeStop(1000);	//stop close to 30cm
 
-		// updated by Qian on 02/16/18
-		int _ticks1 = right4flame(180, 60);
+				int _ticks1 = right4flame(180, 60);
 		completeStop(1000);
 		if(isFlameDetected){
 			turnLeft(180, 60); //back to start point
@@ -271,6 +317,8 @@ task main()
 			// how to finish the rest of turn
 			turnRight(180, 60, _ticks3);
 		}
+		completeStop(1000);
+		/*
 		completeStop(1000);
 
 		//leave the room
@@ -306,9 +354,153 @@ task main()
 
 		//end as finishing room#1
 		//if candle off should return to start point
-		if(isFlameOff){
-			//make 90 left turn
-			turnLeft(90, 60);//turn to the room so we can almost enter.
-			completeStop(1000);
+
+		//start room#3
+		//make 90 turn, going to room#1 direction
+		turnRight(90, 60,0);//turn to the room so we can almost enter.
+		completeStop(1000);
+
+
+		//allow the robot to move forward, to reduce ultrasonic noise
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(1000);
+	//	completeStop(500);
+
+		resetEncoders();
+		while(SensorValue[rightUltra]<rightSpace){
+			walkStraight(lowSpd, comSpd);
 		}
+		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>15){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
+
+		turnRight(90, 60,0);//turn to the room so we can almost enter.
+		completeStop(1000);
+
+		//drive into the room#3
+		//allow the robot to move forward, to reduce ultrasonic noise
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(1000);
+		// enter room#3
+		resetEncoders();
+		while(SensorValue[frontUltra]>20){
+			walkStraight(lowSpd, comSpd);  //Walk straight
+		}
+		completeStop(1000);	//stop close to 30cm
+
+		turnRight(90, 60,0);	//scan the room
+		turnRight(100, 60,0);	//scan the room
+		completeStop(1000);
+
+		// return to the hallway
+		resetEncoders();
+		while(SensorValue[leftUltra]<100){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(500);
+		// exit room#3
+		// stop @ hallway
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(200);
+		completeStop(500);
+
+		// end of room#3
+		// if candle detected & off, go back
+
+		// enter room#4
+		//allow the robot to move forward, to reduce ultrasonic noise
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(1500);
+		resetEncoders();
+		while(SensorValue[frontUltra] > 50){
+			walkStraight(lowSpd, comSpd);
+		}
+		completeStop(1000);
+
+		turnLeft(90, 60);//turn away from the room so we can exit to main hallwaie.
+		turnLeft(100, 60);//turn away from the room so we can exit to main hallwaie.
+		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[rightUltra]<100){
+			walkStraight(lowSpd, comSpd);//get to main hallwaie
+		}
+		completeStop(0);
+
+		//allow the robot to move forward, to reduce ultrasonic noise
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(400);
+		completeStop(1000);
+
+		turnRight(90, 60,0);	//turn to start pointe
+		completeStop(1000);
+
+		resetEncoders();
+		while(SensorValue[frontUltra]>20){
+			walkStraight(lowSpd, comSpd);//go to starte pointe
+		}
+		completeStop(1000);
+
+		//turn to the room 2 hallway
+		turnRight(90, 60,0);
+		completeStop(1000);
+
+		//hop a little
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(1000);
+		completeStop(500);
+
+		//usig right sensor to get to room2 gateway
+
+		resetEncoders();
+		while(SensorValue[rightUltra]<rightSpace){
+			walkStraight(lowSpd, comSpd);// go to opening of the roooom dos
+		}
+
+		completeStop(1000);
+
+		//hop a little to center in the room
+		resetEncoders();
+		walkStraight(lowSpd, comSpd);
+		wait1Msec(200);
+		completeStop(500);
+
+		completeStop(1000);
+		turnRight(90, 60,0);
+		completeStop(1000);//turn to roooom dos
+
+		while(SensorValue[frontUltra]>27){
+			walkStraight(lowSpd, comSpd);//go into the room
+		}
+		completeStop(1000);
+		turnRight(180, 60,0);
+		completeStop(1000);//180 degree scan
+
+		while(SensorValue[frontUltra]>18){
+			walkStraight(lowSpd, comSpd);//go out of the room
+		}
+		completeStop(1000);
+		turnLeft(90, 60);//turn to final destination
+		completeStop(1000);
+
+		while(SensorValue[frontUltra]>25){
+			walkStraight(lowSpd, comSpd);//go to final destination the room
+		}
+		//You get the bag and fumble it
+		//I get the bag and flip it and tumble it
+
+		//#2MuchMIGOS
+
+		//In the kitchen wrist twisting like its stir fry
+*/
 }

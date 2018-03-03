@@ -100,6 +100,7 @@ void putOffFlame(){
 					SensorValue[fan] = 0;	//off fan
 					wait1Msec(1000);
 					SensorValue[redLed] = 1;	//off LED
+					isFlameOff = true;  // Means that flame is off so that the robot goes back to the start
 					break;
 				}
 		}
@@ -161,7 +162,7 @@ int left4flame(int degrees, int speed){
 	//you must reset the encoders
 	resetEncoders();
 
-	int tickGoal = ((leftTicks * degrees)/10);	//increased the tick goal by 1 today by mattyboio == 74@matt
+	int tickGoal = ((rightTicks * degrees)/10);	//increased the tick goal by 1 today by mattyboio == 74@matt
 
 	motor[rightMotor]=speed;
 	motor[leftMotor]=-1*speed;
@@ -172,7 +173,7 @@ int left4flame(int degrees, int speed){
 			if(_flameCurr > _flame0){	// if hear is increasing, not facing straight yet
 				writeDebugStreamLine("flame level %d %d %d", _flame0, _flameCurr, _flameTicks);
 				_flame0 = _flameCurr;
-				_flameTicks = abs(nMotorEncoder[leftMotor]);
+				_flameTicks = abs(nMotorEncoder[rightMotor]);
 			}
 
 		if(nMotorEncoder[rightMotor]>tickGoal){
@@ -215,26 +216,27 @@ int turnRight(int degrees, int speed, int offset){
 		}
 	}
 	return abs(nMotorEncoder[rightMotor]);	//meaning turn is
+			walkStraight(lowSpd, comSpd);	//speed is debateablecompleted
 }
 
-int turnLeft(int degrees, int speed, int offset){
-	//you must reset the encoders
+void turnLeft(int degrees, int speed){
 	resetEncoders();
+	//you must reset the encoders
 
-	int tickGoal = ((leftTicks * degrees)/10 - offset);	//increased the tick goal by 1 today by mattyboio == 74@matt
+	int tickGoal = (leftTicks * degrees)/10;	//72@Matt
 
-	motor[rightMotor]=speed;
 	motor[leftMotor]=-1*speed;
+	motor[rightMotor]=speed;
 
-	while(nMotorEncoder[rightMotor]<tickGoal||nMotorEncoder[leftMotor]>-1*tickGoal){
-		if(nMotorEncoder[rightMotor]>tickGoal){
-			motor[rightMotor]=0;
-		}
+	while(nMotorEncoder[leftMotor]>-1*tickGoal||nMotorEncoder[rightMotor]<tickGoal){
 		if(nMotorEncoder[leftMotor]<-1*tickGoal){
 			motor[leftMotor]=0;
 		}
+		if(nMotorEncoder[rightMotor]>tickGoal){
+			motor[rightMotor]=0;
+			//this is quality control
+		}
 	}
-	return abs(nMotorEncoder[leftMotor]);	//meaning turn is
 }
 
 
@@ -304,10 +306,10 @@ task main()
 		}
 		completeStop(1000);	//stop close to 30cm
 
-		int _ticks1 = right4flame(180, 60);
+				int _ticks1 = right4flame(180, 60);
 		completeStop(1000);
 		if(isFlameDetected){
-			turnLeft(180, 60,0); //back to start point
+			turnLeft(180, 60); //back to start point
 			completeStop(1000);
 
 			int _ticks3 = turnRight(((_ticks1*10/rightTicks) - flameTargetAdj), 60, 0);
@@ -316,7 +318,10 @@ task main()
 			// how to finish the rest of turn
 			turnRight(180, 60, _ticks3);
 		}
-		completeStop(1000);
+		completeStop(450);
+
+
+
 
 		completeStop(1000);
 
@@ -336,7 +341,7 @@ task main()
 
 
 		//make 90 left turn
-		turnLeft(90, 60, 4);//turn to the room so we can almost enter.
+		turnLeft(90, 60);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		resetEncoders();
@@ -351,12 +356,28 @@ task main()
 		wait1Msec(250);
 		completeStop(500);
 
+		if(isFlameOff){
+			turnLeft(90,60);
+			completeStop(1000);
+			while(SensorValue[frontUltra]>18){
+					walkStraight(lowSpd,comSpd);
+				}
+				completeStop(1000);
+
+				turnRight(180,60,0);
+
+				completeStop(0);
+
+		}
+
+
+/*
 		//end as finishing room#1
 		//if candle off should return to start point
 
 		//start room#3
 		//make 90 turn, going to room#1 direction
-		turnRight(90, 60, 0);//turn to the room so we can almost enter.
+		turnRight(90, 60,0);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 
@@ -378,7 +399,7 @@ task main()
 		}
 		completeStop(1000);
 
-		turnRight(90, 60, 0);//turn to the room so we can almost enter.
+		turnRight(90, 60,0);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		//drive into the room#3
@@ -393,8 +414,8 @@ task main()
 		}
 		completeStop(1000);	//stop close to 30cm
 
-		turnRight(90, 60, 0);	//scan the room
-		turnRight(100, 60, 0);	//scan the room
+		turnRight(90, 60,0);	//scan the room
+		turnRight(100, 60,0);	//scan the room
 		completeStop(1000);
 
 		// return to the hallway
@@ -424,24 +445,8 @@ task main()
 		}
 		completeStop(1000);
 
-
-		_ticks1 = left4flame(180, 60);
-		completeStop(1000);
-		if(isFlameDetected){
-			turnRight(180, 60,0); //back to start point
-			completeStop(1000);
-
-			int _ticks3 = turnLeft(((_ticks1*10/rightTicks) - flameTargetAdj), 60, 0);
-			SensorValue[redLed] = 0; // turn on LED
-			putOffFlame(); // put off flame
-			// how to finish the rest of turn
-			turnLeft(180, 60, _ticks3);
-		}
-		completeStop(1000);
-
-
-		//turnLeft(90, 60);//turn away from the room so we can exit to main hallwaie.
-		//turnLeft(100, 60);//turn away from the room so we can exit to main hallwaie.
+		turnLeft(90, 60);//turn away from the room so we can exit to main hallwaie.
+		turnLeft(100, 60);//turn away from the room so we can exit to main hallwaie.
 		completeStop(1000);
 
 		resetEncoders();
@@ -464,10 +469,6 @@ task main()
 			walkStraight(lowSpd, comSpd);//go to starte pointe
 		}
 		completeStop(1000);
-
-		if(isFlameOff){
-			completeStop(10000000);
-		}
 
 		//turn to the room 2 hallway
 		turnRight(90, 60,0);
@@ -509,7 +510,7 @@ task main()
 			walkStraight(lowSpd, comSpd);//go out of the room
 		}
 		completeStop(1000);
-		turnLeft(90, 60, 0);//turn to final destination
+		turnLeft(90, 60);//turn to final destination
 		completeStop(1000);
 
 		while(SensorValue[frontUltra]>25){
@@ -521,5 +522,5 @@ task main()
 		//#2MuchMIGOS
 
 		//In the kitchen wrist twisting like its stir fry
-
+*/
 }

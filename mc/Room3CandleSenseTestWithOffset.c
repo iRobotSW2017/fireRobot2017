@@ -305,7 +305,7 @@ task main()
 		}
 		completeStop(1000);	//stop close to 30cm
 
-		int _ticks1 = right4flame(180, 60);
+				int _ticks1 = right4flame(180, 60);
 		completeStop(1000);
 		if(isFlameDetected){
 			turnLeft(180, 60); //back to start point

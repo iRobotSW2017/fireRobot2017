@@ -104,6 +104,7 @@ void putOffFlame(){
 					break;
 				}
 		}
+
 		//back to the start point
 		resetEncoders();
 		while(abs(nMotorEncoder[rightMotor]) <= _moveClose){
@@ -238,7 +239,6 @@ void turnLeft(int degrees, int speed){
 		}
 	}
 }
-
 
 task main()
 {
@@ -421,6 +421,8 @@ task main()
 
 			int _ticks3 = turnRight(((_ticks2*10/rightTicks) - flameTargetAdj), 60, 0);
 			SensorValue[redLed] = 0; // turn on LED
+			walkStraight(lowSpd, comSpd);
+			wait1Msec(1000);
 			putOffFlame(); // put off flame
 			// how to finish the rest of turn
 			turnRight(180, 60, _ticks3);

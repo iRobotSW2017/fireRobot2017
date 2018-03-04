@@ -416,7 +416,7 @@ task main()
 				int _ticks2 = right4flame(180, 60);
 		completeStop(1000);
 		if(isFlameDetected){
-			turnLeft(180, 60); //back to start point
+			turnLeft(180, 60); //scan for flame
 			completeStop(1000);
 
 			int _ticks3 = turnRight(((_ticks2*10/rightTicks) - flameTargetAdj), 60, 0);
@@ -434,6 +434,18 @@ task main()
 		completeStop(500);
 		// exit room#3
 		// stop @ hallway
+		if(isFlameOff){
+			turnLeft(90,60);
+			completeStop(1000);
+			while(SensorValue[frontUltra]>18){
+					walkStraight(lowSpd,comSpd);
+				}
+				completeStop(1000);
+
+				turnRight(180,60,0);
+
+				completeStop(0); // Dyliboy's return code
+			}
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
 		wait1Msec(200);
@@ -453,8 +465,18 @@ task main()
 		}
 		completeStop(1000);
 
-		turnLeft(90, 60);//turn away from the room so we can exit to main hallwaie.
-		turnLeft(100, 60);//turn away from the room so we can exit to main hallwaie.
+		int _ticks4 = right4flame(180, 60);
+		completeStop(1000);
+		if(isFlameDetected){
+			turnLeft(180, 60); //back to start point
+			completeStop(1000);
+
+			int _ticks3 = turnRight(((_ticks4*10/rightTicks) - flameTargetAdj), 60, 0);
+			SensorValue[redLed] = 0; // turn on LED
+			putOffFlame(); // put off flame
+			// how to finish the rest of turn
+			turnRight(180, 60, _ticks3);
+		}
 		completeStop(1000);
 
 		resetEncoders();
@@ -463,6 +485,18 @@ task main()
 		}
 		completeStop(0);
 
+		if(isFlameOff){
+			turnRight(90,60);
+			completeStop(1000);
+			while(SensorValue[frontUltra]>18){
+					walkStraight(lowSpd,comSpd);
+				}
+				completeStop(1000);
+
+				turnRight(180,60,0);
+
+				completeStop(0); // Dyliboy's return code
+		}
 		//allow the robot to move forward, to reduce ultrasonic noise
 		resetEncoders();
 		walkStraight(lowSpd, comSpd);
@@ -511,9 +545,20 @@ task main()
 			walkStraight(lowSpd, comSpd);//go into the room
 		}
 		completeStop(1000);
-		turnRight(180, 60,0);
-		completeStop(1000);//180 degree scan
+		int _ticks5 = right4flame(180, 60);
+		completeStop(1000);
+		if(isFlameDetected){
+			turnLeft(180, 60); //back to start point
+			completeStop(1000);
 
+			int _ticks3 = turnRight(((_ticks5*10/rightTicks) - flameTargetAdj), 60, 0);
+			SensorValue[redLed] = 0; // turn on LED
+			putOffFlame(); // put off flame
+			// how to finish the rest of turn
+			turnRight(180, 60, _ticks3);
+		}
+		completeStop(1000);
+		//Room 2 does not need an "If flame off, return to the start" because there is already a line of code that pushes it to the start.
 		while(SensorValue[frontUltra]>18){
 			walkStraight(lowSpd, comSpd);//go out of the room
 		}
@@ -524,5 +569,4 @@ task main()
 		while(SensorValue[frontUltra]>25){
 			walkStraight(lowSpd, comSpd);//go to final destination the room
 		}
-
 }

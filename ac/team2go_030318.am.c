@@ -16,7 +16,7 @@
 		int comSpd = 90;
 		int lowSpd = 70;
 		int rightTicks = 62;
-		int leftTicks = 61;
+		int leftTicks = 58;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -336,7 +336,7 @@ task main()
 
 
 		//make 90 left turn
-		turnLeft(90, 60, 4);//turn to the room so we can almost enter.
+		turnLeft(90, 60, 0);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		resetEncoders();

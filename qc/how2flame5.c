@@ -271,6 +271,12 @@ task main()
 		}
 		wait1Msec(500);
 
+		// check whether robot is facing room#2
+		if(SensorValue[rightUltra]>2*rightSpace){
+			turnRight(90,60,0);
+			completeStop(500);
+		}
+
 		//start room#1 -----
 		//Right motor is better to use than fwd motor because of different interferences
 		resetEncoders();
@@ -335,41 +341,6 @@ task main()
 			completeStop(1000);
 		}
 
-		/*
-		//updated by Qian on 03/04
-		int _ticks2 = left4flame(45, 60);
-		completeStop(1000);
-		if(isFlameDetected){
-			turnRight(45, 60, 0); //back to start point
-			completeStop(1000);
-
-			int _ticks4 = turnLeft(((_ticks2*10/leftTicks) - flameTargetAdj), 60, 0);
-			SensorValue[redLed] = 0; // turn on LED
-			putOffFlame(); // put off flame
-			// how to finish the rest of turn
-			turnRight(45, 60, _ticks4);
-			completeStop(1000);
-		}else{
-			turnRight(45, 60, 0);
-			completeStop(1000);
-		}
-
-		// updated by Qian on 02/16/18
-		int _ticks1 = right4flame(180, 60);
-		completeStop(1000);
-		if(isFlameDetected){
-			turnLeft(180, 60, 0); //back to start point
-			completeStop(1000);
-
-			int _ticks3 = turnRight(((_ticks1*10/rightTicks) - flameTargetAdj), 60, 0);
-			SensorValue[redLed] = 0; // turn on LED
-			putOffFlame(); // put off flame
-			// how to finish the rest of turn
-			turnRight(180, 60, _ticks3);
-			completeStop(1000);
-		}
-*/
-
 		//leave the room
 		//use close ultrasonic for navigation to reduce noise
 		resetEncoders();
@@ -406,5 +377,81 @@ task main()
 			left4startDone();
 		}else{
 			// continue room#3
+			resetEncoders();
+			walkStraight(lowSpd-20, comSpd-20);
+			wait1Msec(200);
+			completeStop(50);
+			//start room#3
+			//make 90 turn, going to room#1 direction
+			turnRight(90, 60, 0);//turn to the room so we can almost enter.
+			completeStop(1000);
+			//allow the robot to move forward, to reduce ultrasonic noise
+			resetEncoders();
+			walkStraight(lowSpd, comSpd);
+			wait1Msec(1000);
+
+			resetEncoders();
+			while(SensorValue[rightUltra]<rightSpace){
+				walkStraight(lowSpd, comSpd);
+			}
+			completeStop(1000);
+
+			resetEncoders();
+			while(SensorValue[frontUltra]>15){
+				walkStraight(lowSpd, comSpd);
+			}
+			completeStop(1500); // increase to 1500 to get more close to wall -- updated by Qian on 03/05
+
+			turnRight(90, 60, 0);//turn to the room so we can almost enter.
+			completeStop(1000);
+
+			//drive into the room#3
+			//allow the robot to move forward, to reduce ultrasonic noise
+			resetEncoders();
+			walkStraight(lowSpd, comSpd);
+			wait1Msec(1000);
+			// enter room#3
+			resetEncoders();
+			while(SensorValue[frontUltra]>30){
+				walkStraight(lowSpd, comSpd);  //Walk straight
+			}
+			completeStop(1000);	//stop close to 30cm
+
+			// updated by Qian on 03/05/18
+			turnLeft(60, 60, 0); // to cover all directions
+			int _ticks1_3 = right4flame((180+60), 60);
+			completeStop(1000);
+			if(isFlameDetected){
+				turnLeft((180+60), 60, 0); //back to start point
+				completeStop(1000);
+
+				int _ticks3_3 = turnRight(((_ticks1_3*10/rightTicks) - flameTargetAdj), 60, 0);
+				SensorValue[redLed] = 0; // turn on LED
+				putOffFlame(); // put off flame
+				// how to finish the rest of turn
+				turnRight((180+45), 60, _ticks3_3);
+				completeStop(1000);
+			}
+
+			// return to the hallway
+			resetEncoders();
+			while(SensorValue[leftUltra]<100){
+				walkStraight(lowSpd, comSpd);
+			}
+			completeStop(0);
+
+			//allow the robot to move a little more, position @ the center of intersection
+			resetEncoders();
+			walkStraight(lowSpd, comSpd);
+			wait1Msec(200);
+			completeStop(250);
+
+			//end as finishing room#3
+			//if candle off should return to start point
+			if(isFlameOff){
+				left4startDone();
+			}else{
+			}
+
 		}
 }

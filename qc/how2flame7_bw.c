@@ -15,10 +15,10 @@
 //global variables
 		//int comSpd = 90;
 		//int lowSpd = 70;
-		int comSpd = 80;
-		int lowSpd = 60;
-		int rightTicks = 63; //60
-		int leftTicks = 61;	//57
+		int comSpd = 50;
+		int lowSpd = 40;
+		int rightTicks = 47; //60
+		int leftTicks = 45;	//57
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -325,7 +325,7 @@ task main()
 		completeStop(0);
 		resetEncoders();
 		while(SensorValue[frontUltra]>15){
-			walkStraight(lowSpd, comSpd);
+			walkStraight(lowSpd-20, comSpd-20);
 		}
 		completeStop(1500);
 

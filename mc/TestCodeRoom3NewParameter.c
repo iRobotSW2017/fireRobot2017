@@ -440,6 +440,7 @@ task main()
 					turnLeft((60+60), 45, 0); //back to start point
 					completeStop(1000);
 					int _ticks3_3 = turnRight(((_ticks1_3*10/rightTicks) - flameTargetAdj), 45, 0);
+					int _ticks4_4 = turnLeft(((_ticks1_3*10/rightTicks) - flameTargetAdj), 45, 0);//ONLY FOR TEST!!!!!
 					SensorValue[redLed] = 0; // turn on LED
 					putOffFlame(); // put off flame
 					// how to finish the rest of turn

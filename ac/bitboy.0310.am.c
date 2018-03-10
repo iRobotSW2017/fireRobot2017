@@ -17,8 +17,8 @@
 		//int lowSpd = 70;
 		int comSpd = 50;
 		int lowSpd = 40;
-		int rightTicks = 47; //60
-		int leftTicks = 45;	//57
+		int rightTicks = 43; //60
+		int leftTicks = 41;	//57
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -51,6 +51,7 @@ void walkStraight(int lowSpeed, int CommonSpeed){
 	int _left = SensorValue[leftUltra];
 
 	//try to get robot run in the center line of hall way
+	/*
 	if(_left < 10){
 			motor[leftMotor] = CommonSpeed + 20;
 			motor[rightMotor] = lowSpeed;
@@ -70,8 +71,9 @@ void walkStraight(int lowSpeed, int CommonSpeed){
 			_walkStraight(lowSpeed, CommonSpeed);
 		}
 	}else{
+	*/
 		_walkStraight(lowSpeed, CommonSpeed);
-	}
+	//}
 
 }
 
@@ -338,17 +340,17 @@ task main()
 		wait1Msec(1000);
 		//drive into the room
 		resetEncoders();
-		while(SensorValue[frontUltra]>30){
+		while(SensorValue[frontUltra]>40){
 			walkStraight(lowSpd, comSpd);  //Walk straight
 		}
 		completeStop(1000);	//stop close to 30cm
 
 		// updated by Qian on 03/04/18
-		turnLeft(45, 60, 0); // to cover all directions
-		int _ticks1 = right4flame((180+45), 60);
+		turnLeft(30, 60, 0); // to cover all directions
+		int _ticks1 = right4flame((180+30), 60);
 		completeStop(1000);
 		if(isFlameDetected){
-			turnLeft((180+45), 60, 0); //back to start point
+			turnLeft((180+30), 60, 0); //back to start point
 			completeStop(1000);
 
 			int _ticks3 = turnRight(((_ticks1*10/rightTicks) - flameTargetAdj), 60, 0);
@@ -363,7 +365,7 @@ task main()
 		//use close ultrasonic for navigation to reduce noise
 		resetEncoders();
 		while(SensorValue[leftUltra] < 80){
-				walkStraight(lowSpd, comSpd);
+				walkStraight(30, 40);
 		}
 		completeStop(0);
 		// @ hallway
@@ -489,7 +491,7 @@ task main()
 			if(isFlameOff){
 				left4startDone();
 			}else{
-				// start room#4
+// start room#4
 				resetEncoders();
 				walkStraight(lowSpd-20, comSpd-20);
 				wait1Msec(1000);

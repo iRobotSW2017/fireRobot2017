@@ -51,29 +51,28 @@ void walkStraight(int lowSpeed, int CommonSpeed){
 	int _left = SensorValue[leftUltra];
 
 	//try to get robot run in the center line of hall way
-	/*
+
 	if(_left < 10){
-			motor[leftMotor] = CommonSpeed + 20;
+			motor[leftMotor] = CommonSpeed + 10;
 			motor[rightMotor] = lowSpeed;
 	//		wait1Msec(500);
 	}else if(_right < 10){
-			motor[rightMotor] = CommonSpeed + 20;
+			motor[rightMotor] = CommonSpeed + 10;
 			motor[leftMotor] = lowSpeed;
 	//		wait1Msec(500);
 	}else if((_right < rightSpace) && (_left < rightSpace) && (abs(_left - _right) >= 3)){
 		if(_right < _left){
-			motor[rightMotor] = CommonSpeed + 20;
+			motor[rightMotor] = CommonSpeed + 10;
 			motor[leftMotor] = lowSpeed;
 		}else if(_right > _left){
-			motor[leftMotor] = CommonSpeed + 20;
+			motor[leftMotor] = CommonSpeed + 10;
 			motor[rightMotor] = lowSpeed;
 		}else{
 			_walkStraight(lowSpeed, CommonSpeed);
 		}
 	}else{
-	*/
 		_walkStraight(lowSpeed, CommonSpeed);
-	//}
+	}
 
 }
 
@@ -326,7 +325,7 @@ task main()
 		}
 		completeStop(0);
 		resetEncoders();
-		while(SensorValue[frontUltra]>15){
+		while(SensorValue[frontUltra]>20){
 			walkStraight(lowSpd-20, comSpd-20);
 		}
 		completeStop(1500);

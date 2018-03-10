@@ -1,3 +1,5 @@
+
+
 #pragma config(I2C_Usage, I2C1, i2cSensors)
 #pragma config(Sensor, in8,    IR_sensor,      sensorAnalog)
 #pragma config(Sensor, dgtl3,  frontUltra,     sensorSONAR_cm)
@@ -17,8 +19,8 @@
 		//int lowSpd = 70;
 		int comSpd = 50;
 		int lowSpd = 40;
-		int rightTicks = 45; //60
-		int leftTicks = 43;	//57
+		int rightTicks = 43; //60
+		int leftTicks = 41;	//57
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -273,7 +275,7 @@ void positionAdjByRightUltra(){
 			turnRight(90, 60, 0);
 			completeStop(1000);
 			close2wall();
-			turnLeft(90, 60, 0);
+			turnLeft(85, 60, 0);
 			completeStop(1000);
 		}
 }
@@ -345,7 +347,7 @@ task main()
 
 		// updated by Qian on 03/04/18
 		turnLeft(45, 60, 0); // to cover all directions
-		int _ticks1 = right4flame((180+45), 60);
+		int _ticks1 = right4flame((180+45), 60); //Why are you putting 180+45 instead of 225
 		completeStop(1000);
 		if(isFlameDetected){
 			turnLeft((180+45), 60, 0); //back to start point
@@ -374,7 +376,7 @@ task main()
 		completeStop(1000);//exit the room
 
 		//make 90 left turn
-		turnLeft(90, 60, 0);//turn to the room so we can almost enter.
+		turnLeft(90, 60, 0);//turn to the room so we can almost enter. Used to be 90.
 		completeStop(1000);
 
 		resetEncoders();
@@ -464,7 +466,6 @@ task main()
 						turnLeft(180, 60, 0); //back to start point
 						completeStop(1000);
 						int _ticks3_3b = turnRight(((_ticks1_3b*10/rightTicks) - flameTargetAdj), 60, 0);
-
 						SensorValue[redLed] = 0; // turn on LED
 						putOffFlame(); // put off flame
 						// how to finish the rest of turn
@@ -527,6 +528,5 @@ task main()
 
 			}
 
-	}
-
+		}
 }

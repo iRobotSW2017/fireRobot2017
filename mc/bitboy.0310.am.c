@@ -272,10 +272,10 @@ void close2wall(){
 void positionAdjByRightUltra(){
 		wait1Msec(1000);
 		if(SensorValue[rightUltra] > 20){
-			turnRight(85, 60, 0);
+			turnRight(85, 45, 0);
 			completeStop(1000);
 			close2wall();
-			turnLeft(85, 60, 0);
+			turnLeft(90, 45, 0);
 			completeStop(1000);
 		}
 }
@@ -433,8 +433,8 @@ task main()
 			int _delay = 0;
 
 			// updated by Qian on 03/06/18 -- scan @ entry
-			turnLeft(60, 50, 0); // to cover all directions
-			int _ticks1_3 = right4flame((60+60), 50);
+			turnLeft(60, 45, 0); // to cover all directions
+			int _ticks1_3 = right4flame((60+60), 45);
 			completeStop(1000);
 			if(isFlameDetected){
 				if(_ticks1_3 < (90*rightTicks/10)){ // meaning flame is on the left 60+30 angles range

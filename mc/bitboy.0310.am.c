@@ -51,29 +51,28 @@ void walkStraight(int lowSpeed, int CommonSpeed){
 	int _left = SensorValue[leftUltra];
 
 	//try to get robot run in the center line of hall way
-	/*
+
 	if(_left < 10){
-			motor[leftMotor] = CommonSpeed + 20;
+			motor[leftMotor] = CommonSpeed + 10;
 			motor[rightMotor] = lowSpeed;
 	//		wait1Msec(500);
 	}else if(_right < 10){
-			motor[rightMotor] = CommonSpeed + 20;
+			motor[rightMotor] = CommonSpeed + 10;
 			motor[leftMotor] = lowSpeed;
 	//		wait1Msec(500);
 	}else if((_right < rightSpace) && (_left < rightSpace) && (abs(_left - _right) >= 3)){
 		if(_right < _left){
-			motor[rightMotor] = CommonSpeed + 20;
+			motor[rightMotor] = CommonSpeed + 10;
 			motor[leftMotor] = lowSpeed;
 		}else if(_right > _left){
-			motor[leftMotor] = CommonSpeed + 20;
+			motor[leftMotor] = CommonSpeed + 10;
 			motor[rightMotor] = lowSpeed;
 		}else{
 			_walkStraight(lowSpeed, CommonSpeed);
 		}
 	}else{
-	*/
 		_walkStraight(lowSpeed, CommonSpeed);
-	//}
+	}
 
 }
 
@@ -326,7 +325,7 @@ task main()
 		}
 		completeStop(0);
 		resetEncoders();
-		while(SensorValue[frontUltra]>15){
+		while(SensorValue[frontUltra]>20){
 			walkStraight(lowSpd-20, comSpd-20);
 		}
 		completeStop(1500);
@@ -438,13 +437,13 @@ task main()
 			completeStop(1000);
 			if(isFlameDetected){
 				if(_ticks1_3 < (90*rightTicks/10)){ // meaning flame is on the left 60+30 angles range
-					turnLeft((60+60), 60, 0); //back to start point
+					turnLeft((60+60), 45, 0); //back to start point
 					completeStop(1000);
-					int _ticks3_3 = turnRight(((_ticks1_3*10/rightTicks) - flameTargetAdj), 60, 0);
+					int _ticks3_3 = turnRight(((_ticks1_3*10/rightTicks) - flameTargetAdj), 45, 0);
 					SensorValue[redLed] = 0; // turn on LED
 					putOffFlame(); // put off flame
 					// how to finish the rest of turn
-					turnRight((60+180), 60, _ticks3_3);
+					turnRight((60+180), 45, _ticks3_3);
 					completeStop(1000);
 					_delay = 200;
 				}else{ // flame is on right side more than 30 angles

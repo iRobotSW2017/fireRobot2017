@@ -17,8 +17,8 @@
 		//int lowSpd = 70;
 		int comSpd = 50;
 		int lowSpd = 40;
-		int rightTicks = 47; //60
-		int leftTicks = 45;	//57
+		int rightTicks = 45; //60
+		int leftTicks = 43;	//57
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -464,6 +464,7 @@ task main()
 						turnLeft(180, 60, 0); //back to start point
 						completeStop(1000);
 						int _ticks3_3b = turnRight(((_ticks1_3b*10/rightTicks) - flameTargetAdj), 60, 0);
+
 						SensorValue[redLed] = 0; // turn on LED
 						putOffFlame(); // put off flame
 						// how to finish the rest of turn
@@ -526,5 +527,6 @@ task main()
 
 			}
 
-		}
+	}
+
 }

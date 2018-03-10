@@ -17,8 +17,8 @@
 		//int lowSpd = 70;
 		int comSpd = 50;
 		int lowSpd = 40;
-		int rightTicks = 43; //60
-		int leftTicks = 41;	//57
+		int rightTicks = 45; //60
+		int leftTicks = 43;	//57
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -293,7 +293,7 @@ task main()
 
 		// check whether robot is facing room#2
 		if(SensorValue[rightUltra]>2*rightSpace){
-			turnRight(90,60,0);
+			turnRight(90,45,0);
 			completeStop(500);
 		}
 
@@ -312,7 +312,7 @@ task main()
 		completeStop(500);
 
 		//make 90 turn, going to room#1 direction
-		turnRight(90, 60, 0);//turn to the room so we can almost enter.
+		turnRight(90, 45, 0);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		//allow the robot to move forward
@@ -331,7 +331,7 @@ task main()
 		}
 		completeStop(1500);
 
-		turnRight(90, 60, 0);	//turn to the room so we can almost enter.
+		turnRight(90, 45, 0);	//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		//push robot into room#1 to reduce front ultrasonic false reading
@@ -346,18 +346,18 @@ task main()
 		completeStop(1000);	//stop close to 30cm
 
 		// updated by Qian on 03/04/18
-		turnLeft(30, 60, 0); // to cover all directions
-		int _ticks1 = right4flame((180+30), 60);
+		turnLeft(30, 45, 0); // to cover all directions
+		int _ticks1 = right4flame((180+30), 45);
 		completeStop(1000);
 		if(isFlameDetected){
-			turnLeft((180+30), 60, 0); //back to start point
+			turnLeft((180+30), 45, 0); //back to start point
 			completeStop(1000);
 
-			int _ticks3 = turnRight(((_ticks1*10/rightTicks) - flameTargetAdj), 60, 0);
+			int _ticks3 = turnRight(((_ticks1*10/rightTicks) - flameTargetAdj), 45, 0);
 			SensorValue[redLed] = 0; // turn on LED
 			putOffFlame(); // put off flame
 			// how to finish the rest of turn
-			turnRight((180+45), 60, _ticks3);
+			turnRight((180+30), 45, _ticks3);
 			completeStop(1000);
 		}
 
@@ -376,7 +376,7 @@ task main()
 		completeStop(1000);//exit the room
 
 		//make 90 left turn
-		turnLeft(90, 60, 0);//turn to the room so we can almost enter.
+		turnLeft(90, 45, 0);//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		resetEncoders();
@@ -402,7 +402,7 @@ task main()
 			wait1Msec(200);
 			completeStop(50);
 			//start room#3
-			turnRight(90, 60, 0);//turn to the room so we can almost enter.
+			turnRight(90, 45, 0);//turn to the room so we can almost enter.
 			completeStop(1000);
 			//allow the robot to move forward, to reduce ultrasonic noise
 			resetEncoders();
@@ -417,7 +417,7 @@ task main()
 
 			close2wall();
 
-			turnRight(90, 60, 0);//turn to the room so we can almost enter.
+			turnRight(90, 40, 0);//turn to the room so we can almost enter.
 			completeStop(500);
 
 			//drive into the room#3
@@ -433,18 +433,18 @@ task main()
 			int _delay = 0;
 
 			// updated by Qian on 03/06/18 -- scan @ entry
-			turnLeft(60, 60, 0); // to cover all directions
-			int _ticks1_3 = right4flame((60+60), 60);
+			turnLeft(60, 40, 0); // to cover all directions
+			int _ticks1_3 = right4flame((60+60), 40);
 			completeStop(1000);
 			if(isFlameDetected){
 				if(_ticks1_3 < (90*rightTicks/10)){ // meaning flame is on the left 60+30 angles range
-					turnLeft((60+60), 60, 0); //back to start point
+					turnLeft((60+60), 40, 0); //back to start point
 					completeStop(1000);
-					int _ticks3_3 = turnRight(((_ticks1_3*10/rightTicks) - flameTargetAdj), 60, 0);
+					int _ticks3_3 = turnRight(((_ticks1_3*10/rightTicks) - flameTargetAdj), 40, 0);
 					SensorValue[redLed] = 0; // turn on LED
 					putOffFlame(); // put off flame
 					// how to finish the rest of turn
-					turnRight((60+180), 60, _ticks3_3);
+					turnRight((60+180), 40, _ticks3_3);
 					completeStop(1000);
 					_delay = 200;
 				}else{ // flame is on right side more than 30 angles
@@ -453,7 +453,7 @@ task main()
 			}
 			if(!isFlameOff){
 					// move deep into the room
-					turnLeft(60, 60, 0); //back to start point
+					turnLeft(60, 40, 0); //back to start point
 					completeStop(1000);
 					resetEncoders();
 					while(SensorValue[frontUltra]>30){
@@ -463,13 +463,13 @@ task main()
 					int _ticks1_3b = right4flame(180, 60);
 					completeStop(1000);
 					if(isFlameDetected){
-						turnLeft(180, 60, 0); //back to start point
+						turnLeft(180, 40, 0); //back to start point
 						completeStop(1000);
-						int _ticks3_3b = turnRight(((_ticks1_3b*10/rightTicks) - flameTargetAdj), 60, 0);
+						int _ticks3_3b = turnRight(((_ticks1_3b*10/rightTicks) - flameTargetAdj), 40, 0);
 						SensorValue[redLed] = 0; // turn on LED
 						putOffFlame(); // put off flame
 						// how to finish the rest of turn
-						turnRight(180, 60, _ticks3_3b);
+						turnRight(180, 40, _ticks3_3b);
 						completeStop(1000);
 						_delay = 0;
 					}
@@ -502,18 +502,18 @@ task main()
 				completeStop(100); // just get into room#4 gateway
 
 				// updated by Qian on 03/06/18 -- scan @ entry
-				turnRight(60, 60, 0); // to cover all directions
-				int _ticks1_4 = left4flame((60+60), 60);
+				turnRight(60, 40, 0); // to cover all directions
+				int _ticks1_4 = left4flame((60+60), 40);
 				completeStop(1000);
 				if(isFlameDetected){
 					if(_ticks1_4 < (90*leftTicks/10)){ // meaning flame is on the right 60+30 angles range
-						turnRight((60+60), 60, 0); //back to start point
+						turnRight((60+60), 40, 0); //back to start point
 						completeStop(1000);
-						int _ticks3_4 = turnLeft(((_ticks1_4*10/leftTicks)), 60, 0);
+						int _ticks3_4 = turnLeft(((_ticks1_4*10/leftTicks)), 40, 0);
 						SensorValue[redLed] = 0; // turn on LED
 						putOffFlame(); // put off flame
 						// how to finish the rest of turn
-						turnLeft((60+180), 60, _ticks3_4);
+						turnLeft((60+180), 40, _ticks3_4);
 						completeStop(1000);
 						_delay = 200;
 					}else{ // flame is on right side more than 30 angles

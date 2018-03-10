@@ -17,16 +17,16 @@
 //global variables
 //int comSpd = 90;
 //int lowSpd = 70;
-int comSpd = 50;
-int lowSpd = 40;
-int rightTicks = 45; //60
-int leftTicks = 43;	//57
+int comSpd = 60;
+int lowSpd = 55;
+int rightTicks = 42; //60
+int leftTicks = 44;	//57
 //int comAdjSpd = 31;
 //int delaySec = 450;
 //int frontSpace = 12; //(46-30)/2
 int rightSpace = 23;
 int flameDetected = 120;	//250
-int flameTargetAdj = 5;  //  13,         8
+int flameTargetAdj = 0;  //  13,         8
 int flameOff = 100;
 bool isFlameDetected = false;
 bool isFlameOff = false;
@@ -294,7 +294,7 @@ task main()
 
 	// check whether robot is facing room#2
 	if(SensorValue[rightUltra]>2*rightSpace){
-		turnRight(90,45,0);
+		turnRight(90,50,0);
 		completeStop(500);
 	}
 
@@ -309,11 +309,11 @@ task main()
 	//allow the robot to move a little more, position @ the center of intersection
 	resetEncoders();
 	walkStraight(lowSpd, comSpd);
-	wait1Msec(300);
+	wait1Msec(350);
 	completeStop(500);
 
 	//make 90 turn, going to room#1 direction
-	turnRight(90, 45, 0);//turn to the room so we can almost enter.
+	turnRight(90, 50, 0);//turn to the room so we can almost enter.
 	completeStop(1000);
 
 	//allow the robot to move forward
@@ -327,12 +327,12 @@ task main()
 	}
 	completeStop(0);
 	resetEncoders();
-	while(SensorValue[frontUltra]>20){
+	while(SensorValue[frontUltra]>18){
 		walkStraight(lowSpd-20, comSpd-20);
 	}
 	completeStop(1500);
 
-	turnRight(90, 45, 0);	//turn to the room so we can almost enter.
+	turnRight(90, 50, 0);	//turn to the room so we can almost enter.
 	completeStop(1000);
 
 	//push robot into room#1 to reduce front ultrasonic false reading
@@ -347,18 +347,18 @@ task main()
 	completeStop(1000);	//stop close to 30cm
 
 	// updated by Qian on 03/04/18
-	turnLeft(30, 45, 0); // to cover all directions
-	int _ticks1 = right4flame((180+30), 45);
+//	turnLeft(45, 45, 0); // to cover all directions
+	int _ticks1 = right4flame((180+0), 50);
 	completeStop(1000);
 	if(isFlameDetected){
-		turnLeft((180+30), 45, 0); //back to start point
+		turnLeft((180+0), 50, 0); //back to start point
 		completeStop(1000);
 
-		int _ticks3 = turnRight(((_ticks1*10/rightTicks) - flameTargetAdj), 45, 0);
+		int _ticks3 = turnRight(((_ticks1*10/rightTicks) - flameTargetAdj), 50, 0);
 		SensorValue[redLed] = 0; // turn on LED
 		putOffFlame(); // put off flame
 		// how to finish the rest of turn
-		turnRight((180+30), 45, _ticks3);
+		turnRight((180+0), 50, _ticks3);
 		completeStop(1000);
 	}
 
@@ -377,7 +377,7 @@ task main()
 	completeStop(1000);//exit the room
 
 	//make 90 left turn
-	turnLeft(90, 45, 0);//turn to the room so we can almost enter.
+	turnLeft(90, 50, 0);//turn to the room so we can almost enter.
 	completeStop(1000);
 
 	resetEncoders();
@@ -403,7 +403,7 @@ task main()
 		wait1Msec(200);
 		completeStop(50);
 		//start room#3
-		turnRight(90, 45, 0);//turn to the room so we can almost enter.
+		turnRight(90, 50, 0);//turn to the room so we can almost enter.
 		completeStop(1000);
 		//allow the robot to move forward, to reduce ultrasonic noise
 		resetEncoders();

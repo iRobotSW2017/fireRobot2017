@@ -15,17 +15,17 @@
 //global variables
 		//int comSpd = 90;
 		//int lowSpd = 70;
-		int comSpd = 80;
-		int lowSpd = 50;
+		int comSpd = 50;
+		int lowSpd = 40;
 		int rightTicks = 42; //60
-		int leftTicks = 44;	//57
-		int turnSpd = 60;
+		int leftTicks = 41;	//57
+		int turnSpd = 50;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
 		int rightSpace = 23;
 		int flameDetected = 120;	//250
-		int flameTargetAdj = 13; //8
+		int flameTargetAdj = 0; // 8
 		int flameOff = 100;
 		bool isFlameDetected = false;
 		bool isFlameOff = false;
@@ -326,7 +326,7 @@ task main()
 		completeStop(0);
 		resetEncoders();
 		while(SensorValue[frontUltra]>15){
-			walkStraight(lowSpd, comSpd);
+			walkStraight(lowSpd-20, comSpd-20);
 		}
 		completeStop(1500);
 
@@ -349,7 +349,16 @@ task main()
 		int _ticks1 = right4flame((180+45), turnSpd);
 		completeStop(1000);
 		if(isFlameDetected){
-			turnLeft((180+45), turnSpd, 0); //back to start point
+			int _ticks3 = turnLeft((180+45), turnSpd, _ticks1); //back to start point
+			completeStop(1000);
+			SensorValue[redLed] = 0; // turn on LED
+			putOffFlame(); // put off flame
+			// how to finish the rest of turn
+			turnRight((_ticks3*10/leftTicks), turnSpd, 0);
+			completeStop(1000);
+
+			/*
+			turnLeft((180+45)*(rightTicks/leftTicks), turnSpd, 0); //back to start point
 			completeStop(1000);
 
 			int _ticks3 = turnRight(((_ticks1*10/rightTicks) - flameTargetAdj), turnSpd, 0);
@@ -358,6 +367,7 @@ task main()
 			// how to finish the rest of turn
 			turnRight((180+45), turnSpd, _ticks3);
 			completeStop(1000);
+			*/
 		}
 
 		//leave the room
@@ -437,14 +447,23 @@ task main()
 			completeStop(1000);
 			if(isFlameDetected){
 				if(_ticks1_3 < (90*rightTicks/10)){ // meaning flame is on the left 60+30 angles range
-					turnLeft((60+60), turnSpd, 0); //back to start point
+
+					int _ticks3_3 = turnLeft((60+60), turnSpd, _ticks1_3); //back to start point
+					completeStop(1000);
+					SensorValue[redLed] = 0; // turn on LED
+					putOffFlame(); // put off flame
+					// how to finish the rest of turn
+					turnRight((_ticks3_3*10/leftTicks), turnSpd, 0);
+					completeStop(1000);
+
+					/*turnLeft((60+60), turnSpd, 0); //back to start point
 					completeStop(1000);
 					int _ticks3_3 = turnRight(((_ticks1_3*10/rightTicks) - flameTargetAdj), turnSpd, 0);
 					SensorValue[redLed] = 0; // turn on LED
 					putOffFlame(); // put off flame
 					// how to finish the rest of turn
 					turnRight((60+180), turnSpd, _ticks3_3);
-					completeStop(1000);
+					completeStop(1000);*/
 					_delay = 200;
 				}else{ // flame is on right side more than 30 angles
 					isFlameDetected = false; //reset for moving forward on right side scan only

@@ -358,12 +358,89 @@ task main()
 				completeStop(0);
 
 				if(_isContinueR2){
-					resetEncoders();
-					turnRight(180, turnSpd, 0);
-					wait1Msec(1000);
-					completeStop(1000);
+				resetEncoders();
+				turnRight(90, turnSpd, 0);
+
+				completeStop(1000);
+
+				resetEncoders();
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(500);
+				completeStop(1000);
+
+				//first leg of da daetour. this is so cool
+				resetEncoders();
+				while(SensorValue(leftUltra)<rightSpace){
+					walkStraight(lowSpd, comSpd);
+				}
+								resetEncoders();
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(500);
+				completeStop(500);
+
+				//self explanitory
+				turnLeft(90, turnSpd, 0);
+
+				resetEncoders();
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(500);
+				completeStop(500);
+
+				//second leg of da daetour. this is also so cool
+				resetEncoders();
+				while(SensorValue(leftUltra)<rightSpace){
+					walkStraight(lowSpd, comSpd);
+				}
+
+				resetEncoders();
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(400);
+				completeStop(500);
+				turnLeft(90, turnSpd, 0);
+
+				resetEncoders();
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(1000);
+				completeStop(500);
+
+				resetEncoders();
+				while(SensorValue(leftUltra)<rightSpace){
+					walkStraight(lowSpd, comSpd);
+				}
+
+				resetEncoders();
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(300);
+				completeStop(500);
+
+				turnLeft(90, turnSpd, 0);
+
+				resetEncoders();
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(1400);
+				completeStop(500);
+				turnLeft(100, turnSpd, 0);
 				}else{
-					// all set
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(500);
+				completeStop(500);
+
+				resetEncoders();
+				while(SensorValue(rightUltra)<rightSpace){
+					walkStraight(lowSpd, comSpd);
+				}
+				resetEncoders();
+				completeStop(500);
+				walkStraight(lowSpd, comSpd);
+				wait1Msec(400);
+				completeStop(500);
+
+				resetEncoders();
+				turnRight(90, turnSpd, 0);
+				while(SensorValue(frontUltra)<15){
+					walkStraight(lowSpd, comSpd);
+				}
+				completeStop(500);
 				}
 
 }

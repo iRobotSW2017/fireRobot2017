@@ -599,7 +599,6 @@ task main()
 
 				completeStop(1000);
 
-				//hop like a bonnie rabbit
 				resetEncoders();
 				walkStraight(lowSpd, comSpd);
 				wait1Msec(500);
@@ -620,7 +619,6 @@ task main()
 				//self explanitory
 				turnLeft(90, turnSpd, 0);
 
-				//hop like a wonnie babbit v3
 				resetEncoders();
 				walkStraight(lowSpd, comSpd);
 				wait1Msec(500);
@@ -632,7 +630,6 @@ task main()
 					walkStraight(lowSpd, comSpd);
 				}
 
-				//vop hike l aonnie wabbit b4
 				resetEncoders();
 				walkStraight(lowSpd, comSpd);
 				wait1Msec(400);
@@ -646,7 +643,7 @@ task main()
 				wait1Msec(500);
 				completeStop(500);
 
-				//third leg of dae daetor. t  h  i  s     i  s     a  l  s  o     c  o  o  l
+				//third leg of dae daetor.
 				resetEncoders();
 				while(SensorValue(leftUltra)<rightSpace){
 					walkStraight(lowSpd, comSpd);

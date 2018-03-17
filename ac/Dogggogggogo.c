@@ -338,13 +338,6 @@ task main()
 								if(_right2 > 50){
 									// detect the room#2 open
 									_isContinueR2 = false;
-
-									resetEncoders();
-									walkStraight(lowSpd-20, comSpd-20);
-									wait1Msec(800);
-									completeStop(1000);
-
-									turnRight(90, turnSpd, 0);
 									break;
 								}
 						}
@@ -368,12 +361,11 @@ task main()
 				while(SensorValue(leftUltra)<rightSpace){
 					walkStraight(lowSpd, comSpd);
 				}
-				completeStop(1000);
 
 				//hop like a bonnie wabbit v2
 				resetEncoders();
 				walkStraight(lowSpd, comSpd);
-				wait1Msec(600);
+				wait1Msec(200);
 				completeStop(500);
 
 				//self explanitory
@@ -382,7 +374,7 @@ task main()
 				//hop like a wonnie babbit v3
 				resetEncoders();
 				walkStraight(lowSpd, comSpd);
-				wait1Msec(1000);
+				wait1Msec(500);
 				completeStop(500);
 
 				//second leg of da daetour. this is also so cool
@@ -394,7 +386,7 @@ task main()
 				//vop hike l aonnie wabbit b4
 				resetEncoders();
 				walkStraight(lowSpd, comSpd);
-				wait1Msec(600);
+				wait1Msec(400);
 				completeStop(500);
 
 				//solf explanitairy
@@ -402,14 +394,14 @@ task main()
 
 				resetEncoders();
 				walkStraight(lowSpd, comSpd);
-				wait1Msec(1000);
+				wait1Msec(500);
 				completeStop(500);
 
 				//third leg of dae daetor. t  h  i  s     i  s     a  l  s  o     c  o  o  l
 				resetEncoders();
 				while(SensorValue(leftUltra)<rightSpace){
 					walkStraight(lowSpd, comSpd);
-				}completeStop(1000);
+				}
 
 				//bop vike h lonnie aabbit w5
 				resetEncoders();
@@ -419,16 +411,52 @@ task main()
 
 				//eoly sxplanitairf
 				turnLeft(90, turnSpd, 0);
-				completeStop(1000);
 
 				//wop bike v honnie labbit a6
 				resetEncoders();
 				walkStraight(lowSpd, comSpd);
-				wait1Msec(1400);
+				wait1Msec(1100);
 				completeStop(500);
 
+				//fourth leg of dae daetor. this is also cool FLEX ON DEM HATRS
+				//resetEncoders();
+				//while(SensorValue(leftUltra)<rightSpace){
+				//	walkStraight(lowSpd, comSpd);
+				//}
+
+				//solf explanitairy once agian begone
 				turnLeft(90, turnSpd, 0);
+
+				resetEncoders();
+				while(SensorValue[frontUltra]>27){
+					walkStraight(lowSpd, comSpd);//go into the room
+				}
 				completeStop(1000);
+				turnRight(180, turnSpd, 0);						// put the flame sense code right here, DAD, my little 13 year old brain can't handle all of this.
+				completeStop(1000);//180 degree scan
+
+				turnRight(90, turnSpd, 0);
+			completeStop(1000);
+
+			resetEncoders();
+			walkStraight(lowSpd, comSpd);
+			wait1Msec(300);
+			completeStop(1000);
+
+			resetEncoders();
+			while(SensorValue(rightUltra)<rightSpace){
+				walkStraight(lowSpd, comSpd);
+			}
+			completeStop(1000);
+
+			resetEncoders();
+			walkStraight(lowSpd, comSpd);
+			wait1Msec(300);
+			completeStop(1000);
+
+			turnRight(90, turnSpd, 0);
+			completeStop(1000);
+
 				}else{
 					// all set
 				}

@@ -271,7 +271,7 @@ void close2wall(){
 void positionAdjByRightUltra(){
 		wait1Msec(1000);
 		if(SensorValue[rightUltra] > 20){
-			turnRight(85, 45, 0);
+			turnRight(90, 45, 0);
 			completeStop(1000);
 			close2wall();
 			turnLeft(90, 45, 0);
@@ -440,7 +440,6 @@ task main()
 					turnLeft((60+60), 45, 0); //back to start point
 					completeStop(1000);
 					int _ticks3_3 = turnRight(((_ticks1_3*10/rightTicks) - flameTargetAdj), 45, 0);
-					int _ticks4_4 = turnLeft(((_ticks1_3*10/rightTicks) - flameTargetAdj), 45, 0);//ONLY FOR TEST!!!!!
 					SensorValue[redLed] = 0; // turn on LED
 					putOffFlame(); // put off flame
 					// how to finish the rest of turn

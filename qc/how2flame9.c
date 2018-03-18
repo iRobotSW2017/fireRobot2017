@@ -18,8 +18,9 @@
 		int comSpd = 50;
 		int lowSpd = 40;
 		int rightTicks = 41; //60
-		int leftTicks = 41;	//57
+		int leftTicks = 42;	//57
 		int turnSpd = 50;
+		float halfSec50dist = 15.4;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -29,8 +30,6 @@
 		int flameOff = 100;
 		bool isFlameDetected = false;
 		bool isFlameOff = false;
-		int senseDog1 = -1;
-		int senseDog2 = -1;
 
 void _walkStraight(int lowSpeed, int CommonSpeed){
 		if ((nMotorEncoder[rightMotor]) > (abs(nMotorEncoder[leftMotor]))){
@@ -55,19 +54,19 @@ void walkStraight(int lowSpeed, int CommonSpeed){
 
 	//try to get robot run in the center line of hall way
 	if(_left < 10){
-			motor[leftMotor] = CommonSpeed + 10;
+			motor[leftMotor] = CommonSpeed +7;
 			motor[rightMotor] = lowSpeed;
 	//		wait1Msec(500);
 	}else if(_right < 10){
-			motor[rightMotor] = CommonSpeed + 10;
+			motor[rightMotor] = CommonSpeed +7;
 			motor[leftMotor] = lowSpeed;
 	//		wait1Msec(500);
 	}else if((_right < rightSpace) && (_left < rightSpace) && (abs(_left - _right) >= 3)){
 		if(_right < _left){
-			motor[rightMotor] = CommonSpeed + 10;
+			motor[rightMotor] = CommonSpeed +7;
 			motor[leftMotor] = lowSpeed;
 		}else if(_right > _left){
-			motor[leftMotor] = CommonSpeed + 10;
+			motor[leftMotor] = CommonSpeed +7;
 			motor[rightMotor] = lowSpeed;
 		}else{
 			_walkStraight(lowSpeed, CommonSpeed);
@@ -264,7 +263,7 @@ void left4startDone(){
 
 void close2wall(){
 		resetEncoders();
-		while(SensorValue[frontUltra]>10){
+		while(SensorValue[frontUltra]>12){
 			walkStraight(lowSpd-20, comSpd-20);
 		}
 		completeStop(500); // increase to 1500 to get more close to wall -- updated by Qian on 03/05
@@ -281,38 +280,27 @@ void positionAdjByRightUltra(){
 		}
 }
 
-bool isDogFound(){
-		wait1Msec(100);
-		senseDog1 = SensorValue(rightUltra);
-		wait1Msec(100);
-		senseDog2 = SensorValue(rightUltra);
+/*
+ * try to adj the robot's body by half sec ultrasonic
+ */
+void adjustRobotByRightUltra(){
+		motor[rightMotor]=0;
+		motor[leftMotor]=0;
+		int _right0 = SensorValue[rightUltra];
+		motor[rightMotor]=turnSpd;
+		motor[leftMotor]=turnSpd;
+		wait1Msec(250);
+		int _right1 = SensorValue[rightUltra];
+		// calculate degree adj
+		int _results = asin(abs(_right0-_right1)/(halfSec50dist/2)) * 180 / 3.1415;
 
-		bool _open1 = false;
-		bool _open2 = false;
-		bool _open3 = false;
-
-		if(senseDog1 >=40 && senseDog1 <= 140) _open1 = true;
-		if(senseDog2 >=40 && senseDog2 <= 140) _open2 = true;
-
-		if(_open1 && _open2) return false;
-		if(_open1 || _open2){
-			wait1Msec(100);
-			int senseDog3 = SensorValue(rightUltra);
-			if(senseDog3 >=40 && senseDog3 <= 140) _open3 = true;
-			if (_open3) return false;
+		if(_right0<_right1){
+			//turn right a little
+			turnRight(_results, turnSpd, 0);
+		}else if(_right0>_right1){
+			//turn right a little
+			turnLeft(_results, turnSpd, 0);
 		}
-
-	/*	if(senseDog1!= senseDog2) {
-			return true;
-		}else if(senseDog1<=40 && senseDog2<=40){
-			return true;
-		}
-		*/
-		/*if(senseDog1>=40 && senseDog2>=40&& senseDog1<90 && senseDog2<90){
-			return false;
-		}*/
-
-		return true;
 
 }
 
@@ -343,8 +331,10 @@ task main()
 
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
-		walkStraight(lowSpd, comSpd);
-		wait1Msec(500);
+		clearTimer(T1);
+		while(time1(T1)<700){
+			walkStraight(lowSpd, comSpd);
+		}
 		completeStop(500);
 
 		//make 90 turn, going to room#1 direction
@@ -353,27 +343,28 @@ task main()
 
 		//allow the robot to move forward
 		resetEncoders();
-		walkStraight(lowSpd, comSpd);
-		wait1Msec(1000);
+		clearTimer(T1);
+		while(time1(T1)<1000){
+			walkStraight(lowSpd, comSpd);
+		}
 
 		resetEncoders();
 		while(SensorValue[rightUltra]<rightSpace){
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(0);
-		resetEncoders();
-		while(SensorValue[frontUltra]>15){
-			walkStraight(lowSpd-20, comSpd-20);
-		}
-		completeStop(1500);
+
+		close2wall();
 
 		turnRight(90, turnSpd, 0);	//turn to the room so we can almost enter.
 		completeStop(1000);
 
 		//push robot into room#1 to reduce front ultrasonic false reading
 		resetEncoders();
-		walkStraight(lowSpd, comSpd);
-		wait1Msec(1000);
+		clearTimer(T1);
+		while(time1(T1)<1000){
+			walkStraight(lowSpd, comSpd);
+		}
 		//drive into the room
 		resetEncoders();
 		while(SensorValue[frontUltra]>30){
@@ -382,11 +373,11 @@ task main()
 		completeStop(1000);	//stop close to 30cm
 
 		// updated by Qian on 03/04/18
-		turnLeft(45, turnSpd, 0); // to cover all directions
-		int _ticks1 = right4flame((180+45), turnSpd);
+		turnLeft(60, turnSpd, 0); // to cover all directions
+		int _ticks1 = right4flame((180+60), turnSpd);
 		completeStop(1000);
 		if(isFlameDetected){
-			int _ticks3 = turnLeft((180+45), turnSpd, _ticks1); //back to start point
+			int _ticks3 = turnLeft(((180+60) - _ticks1*10/rightTicks), turnSpd, 0);
 			completeStop(1000);
 			SensorValue[redLed] = 0; // turn on LED
 			putOffFlame(); // put off flame
@@ -407,20 +398,26 @@ task main()
 			*/
 		}
 
+		// .5 sec adj robot
+		positionAdjByRightUltra();
+		adjustRobotByRightUltra();
+		adjustRobotByRightUltra();
+
 		//leave the room
 		//use close ultrasonic for navigation to reduce noise
 		resetEncoders();
-		while(SensorValue[leftUltra] < 80){
-				walkStraight(lowSpd, comSpd);
+		while(SensorValue[leftUltra] < 40){
+				walkStraight(lowSpd -10, comSpd -10);
 		}
 		completeStop(0);
 		// @ hallway
-		resetEncoders();
+		close2wall();
+		/*resetEncoders();
 		while(SensorValue[frontUltra]>15){
 				walkStraight(lowSpd-20, comSpd-20);
 		}
 		completeStop(1000);//exit the room
-
+		*/
 		//make 90 left turn
 		turnLeft(90, turnSpd, 0);//turn to the room so we can almost enter.
 		completeStop(1000);
@@ -433,8 +430,10 @@ task main()
 
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
-		walkStraight(lowSpd, comSpd);
-		wait1Msec(250);
+		clearTimer(T1);
+		while(time1(T1)<250){
+			walkStraight(lowSpd, comSpd);
+		}
 		completeStop(500);
 
 		//end as finishing room#1
@@ -444,16 +443,20 @@ task main()
 		}else{
 			// continue room#3
 			resetEncoders();
-			walkStraight(lowSpd-20, comSpd-20);
-			wait1Msec(200);
+			clearTimer(T1);
+			while(time1(T1)<600){
+				walkStraight(lowSpd-20, comSpd-20);
+			}
 			completeStop(50);
 			//start room#3
 			turnRight(90, turnSpd, 0);//turn to the room so we can almost enter.
 			completeStop(1000);
 			//allow the robot to move forward, to reduce ultrasonic noise
 			resetEncoders();
-			walkStraight(lowSpd, comSpd);
-			wait1Msec(1000);
+			clearTimer(T1);
+			while(time1(T1)<1000){
+				walkStraight(lowSpd, comSpd);
+			}
 
 			resetEncoders();
 			while(SensorValue[rightUltra]<rightSpace){
@@ -608,7 +611,7 @@ task main()
 
 
 			//	if(SensorValue(rightUltra)<2*rightSpace){
-			if(isDogFound()){ // determines if the doggo is blocking de wae
+			if(true){ // determines if the doggo is blocking de wae
 				//if the dog is there, turn right.
 				turnRight(180, turnSpd, 0);
 

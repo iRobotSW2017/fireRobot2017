@@ -21,6 +21,7 @@
 		int leftTicks = 42;	//57
 		int turnSpd = 50;
 		float halfSec50dist = 15.4;
+		int minDistant = 12;
 		//int comAdjSpd = 31;
 		//int delaySec = 450;
 		//int frontSpace = 12; //(46-30)/2
@@ -263,7 +264,7 @@ void left4startDone(){
 
 void close2wall(){
 		resetEncoders();
-		while(SensorValue[frontUltra]>12){
+		while(SensorValue[frontUltra]>minDistant){
 			walkStraight(lowSpd-20, comSpd-20);
 		}
 		completeStop(500); // increase to 1500 to get more close to wall -- updated by Qian on 03/05
@@ -271,7 +272,7 @@ void close2wall(){
 
 void positionAdjByRightUltra(){
 		wait1Msec(1000);
-		if(SensorValue[rightUltra] > 20){
+		if(SensorValue[rightUltra] > minDistant){
 			turnRight(90, turnSpd,0);
 			completeStop(1000);
 			close2wall();
@@ -300,6 +301,30 @@ void adjustRobotByRightUltra(){
 		}else if(_right0>_right1){
 			//turn right a little
 			turnLeft(_results, turnSpd, 0);
+		}
+
+}
+
+/*
+ * try to adj the robot's body by half sec ultrasonic
+ */
+void adjustRobotByLeftUltra(){
+		motor[rightMotor]=0;
+		motor[leftMotor]=0;
+		int _left0 = SensorValue[leftUltra];
+		motor[rightMotor]=turnSpd;
+		motor[leftMotor]=turnSpd;
+		wait1Msec(250);
+		int _left1 = SensorValue[leftUltra];
+		// calculate degree adj
+		int _results = asin(abs(_left0-_left1)/(halfSec50dist/2)) * 180 / 3.1415;
+
+		if(_left0<_left1){
+			//turn right a little
+			turnLeft(_results, turnSpd, 0);
+		}else if(_left0>_left1){
+			//turn right a little
+			turnRight(_results, turnSpd, 0);
 		}
 
 }
@@ -463,22 +488,25 @@ task main()
 				walkStraight(lowSpd, comSpd);
 			}
 			completeStop(1000);
-
 			close2wall();
 
 			turnRight(90, turnSpd, 0);//turn to the room so we can almost enter.
 			completeStop(500);
+			// adj by leftUltra
+			adjustRobotByLeftUltra();
 
 			//drive into the room#3
 			//allow the robot to move forward, to reduce ultrasonic noise
 			resetEncoders();
-			walkStraight(lowSpd-20, comSpd-20);
+			clearTimer(T1);
+			while(time1(T1)<1000){
+				walkStraight(lowSpd-20, comSpd-20);
+			}
 			/*wait1Msec(10); // just get into room#3 gateway
 			resetEncoders();
 			while(SensorValue[rightUltra]>80){
 				walkStraight(lowSpd-20, comSpd-20);
 			}*/
-			wait1Msec(1000); // just get into room#3 gateway
 			int _delay = 0;
 
 			// updated by Qian on 03/06/18 -- scan @ entry
@@ -486,9 +514,9 @@ task main()
 			int _ticks1_3 = right4flame((60+60), turnSpd);
 			completeStop(1000);
 			if(isFlameDetected){
-				if(_ticks1_3 < (90*rightTicks/10)){ // meaning flame is on the left 60+30 angles range
+				if((_ticks1_3*10/rightTicks) < 90){ // meaning flame is on the left 60+30 angles range
 
-					int _ticks3_3 = turnLeft((60+60), turnSpd, _ticks1_3); //back to start point
+					int _ticks3_3 = turnLeft((60+60-(_ticks1_3*10/rightTicks)), turnSpd, 0); //back to start point
 					completeStop(1000);
 					SensorValue[redLed] = 0; // turn on LED
 					putOffFlame(); // put off flame
@@ -521,19 +549,22 @@ task main()
 					int _ticks1_3b = right4flame(180, turnSpd);
 					completeStop(1000);
 					if(isFlameDetected){
-						turnLeft(180, turnSpd, 0); //back to start point
-						completeStop(1000);
-						int _ticks3_3b = turnRight(((_ticks1_3b*10/rightTicks) - flameTargetAdj), turnSpd, 0);
+						//turnLeft(180, turnSpd, 0); //back to start point
+						//completeStop(1000);
+						//int _ticks3_3b = turnRight(((_ticks1_3b*10/rightTicks) - flameTargetAdj), turnSpd, 0);
+						int _ticks3_3b = turnLeft((180 - (_ticks1_3b*10/rightTicks) - flameTargetAdj), turnSpd, 0);
 						SensorValue[redLed] = 0; // turn on LED
 						putOffFlame(); // put off flame
 						// how to finish the rest of turn
-						turnRight(180, turnSpd, _ticks3_3b);
+						turnRight(_ticks3_3b*10/leftTicks, turnSpd, 0);
 						completeStop(1000);
 						_delay = 0;
 					}
 			}
 			//adjust robot position to have a better exit way
 			positionAdjByRightUltra();
+			adjustRobotByRightUltra();
+
 			resetEncoders();
 			while(SensorValue[leftUltra]<80){
 				walkStraight(lowSpd-20, comSpd-20);
@@ -542,8 +573,12 @@ task main()
 
 			//how to position the robot @ the center of the hallway ?? still not good @ case#1
 			positionAdjByRightUltra();
-			walkStraight(lowSpd-20, comSpd-20);
-			wait1Msec(200 + _delay);
+			adjustRobotByRightUltra();
+
+			clearTimer(T1);
+			while(time1(T1)<(200 + _delay)){
+				walkStraight(lowSpd-20, comSpd-20);
+			}
 			completeStop(500);
 
 			if(isFlameOff){
@@ -551,8 +586,10 @@ task main()
 			}else{
 				// start room#4
 				resetEncoders();
-				walkStraight(lowSpd-20, comSpd-20);
-				wait1Msec(1000);
+				clearTimer(T1);
+				while(time1(T1)<1000){
+					walkStraight(lowSpd-20, comSpd-20);
+				}
 				resetEncoders();
 				while(SensorValue[leftUltra] > 70){
 					walkStraight(lowSpd-20, comSpd-20);

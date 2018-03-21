@@ -252,14 +252,20 @@ int turnLeft(int degrees, int speed, int offset){
 	return abs(nMotorEncoder[leftMotor]);	//meaning turn is
 }
 
-void left4startDone(){
-		turnLeft(90,60,0);
+void jobWellDone(int LorR){
+		switch(LorR){
+			case 2:
+				turnRight(90, turnSpd,0);
+			break;
+			default:
+				turnLeft(90, turnSpd,0);
+		}
 		completeStop(1000);
-		while(SensorValue[frontUltra]>16){
+		while(SensorValue[frontUltra]>minDistant){
 				walkStraight(lowSpd,comSpd);
 		}
 		completeStop(1000);
-		turnRight(180,60,0);
+		turnRight(180, turnSpd,0);
 		completeStop(0);
 }
 
@@ -271,6 +277,9 @@ void close2wall(){
 		completeStop(500); // increase to 1500 to get more close to wall -- updated by Qian on 03/05
 }
 
+/*
+ * Use right ultrasound scanner to move robot middle of hallway position
+ */
 void positionAdjByRightUltra(){
 		wait1Msec(1000);
 		if(SensorValue[rightUltra] > minDistant){
@@ -278,6 +287,20 @@ void positionAdjByRightUltra(){
 			completeStop(1000);
 			close2wall();
 			turnLeft(90, turnSpd, 0);
+			completeStop(1000);
+		}
+}
+
+/*
+ * Use left ultrasound scanner to move robot middle of hallway position
+ */
+void positionAdjByLeftUltra(){
+		wait1Msec(1000);
+		if(SensorValue[leftUltra] > minDistant){
+			turnLeft(90, turnSpd,0);
+			completeStop(1000);
+			close2wall();
+			turnRight(90, turnSpd, 0);
 			completeStop(1000);
 		}
 }
@@ -361,7 +384,7 @@ task main()
 
 		// check whether robot is facing room#2
 		if(SensorValue[rightUltra]>2*rightSpace){
-			turnRight(90,60,0);
+			turnRight(90, turnSpd,0);
 			completeStop(500);
 		}
 
@@ -467,7 +490,7 @@ task main()
 		//end as finishing room#1
 		//if candle off should return to start point
 		if(isFlameOff){
-			left4startDone();
+			jobWellDone(1);
 		}else{
 			// continue room#3
 			resetEncoders();
@@ -510,7 +533,7 @@ task main()
 					SensorValue[redLed] = 0; // turn on LED
 					putOffFlame(); // put off flame
 					// how to finish the rest of turn
-					turnRight((_ticks3_3*10/leftTicks), turnSpd, 0);
+					turnRight((_ticks3_3*10/leftTicks + 120), turnSpd, 0);
 					completeStop(1000);
 
 				}else{ // flame is on right side more than 30 angles
@@ -554,7 +577,7 @@ task main()
 			moveforward(18, lowSpd-10);
 
 			if(isFlameOff){
-				left4startDone();
+				jobWellDone(1);
 			}else{
 				// start room#4
 				//positionAdjByRightUltra();
@@ -567,14 +590,12 @@ task main()
 				int _ticks1_4 = left4flame((60+60), turnSpd);
 				completeStop(1000);
 				if(isFlameDetected){
-					if(_ticks1_4 < (90*leftTicks/10)){ // meaning flame is on the right 60+30 angles range
-						turnRight((60+60), turnSpd, 0); //back to start point
-						completeStop(1000);
-						int _ticks3_4 = turnLeft(((_ticks1_4*10/leftTicks)), turnSpd, 0);
+					if((_ticks1_4*10/leftTicks) < 90){ // meaning flame is on the right 60+30 angles range
+						int _ticks3_4 = turnRight((60+60-(_ticks1_4*10/leftTicks)), turnSpd, 0);
 						SensorValue[redLed] = 0; // turn on LED
 						putOffFlame(); // put off flame
 						// how to finish the rest of turn
-						turnLeft((60+180), turnSpd, _ticks3_4);
+						turnLeft((120+_ticks3_4*10/rightTicks), turnSpd, 0);
 						completeStop(1000);
 					}else{ // flame is on right side more than 30 angles
 						isFlameDetected = false; //reset for moving forward on right side scan only
@@ -584,157 +605,82 @@ task main()
 					// move deep into the room
 					turnRight(60, turnSpd, 0); //back to start point
 					completeStop(1000);
+					moveforward(20, lowSpd-10);
+					int _ticks1_4b = left4flame(180, turnSpd);
+					completeStop(1000);
+					if(isFlameDetected){
+						int _ticks3_4b = turnRight((180 - (_ticks1_4b*10/leftTicks) - flameTargetAdj), turnSpd, 0);
+						SensorValue[redLed] = 0; // turn on LED
+						putOffFlame(); // put off flame
+						// how to finish the rest of turn
+						turnLeft(_ticks3_4b*10/rightTicks, turnSpd, 0);
+						completeStop(1000);
+					}
 				}
 
-				turnRight(170, turnSpd, 0);
-				completeStop(1000);
+				positionAdjByLeftUltra();
+				adjustRobotByLeftUltra();
 
 				resetEncoders();
-				while(SensorValue(rightUltra)<100){
-					walkStraight(lowSpd, comSpd);
+				while(SensorValue[rightUltra]<65){
+					walkStraight(lowSpd-20, comSpd-20);
 				}
-				completeStop(1000);
+				completeStop(0);
 
-				resetEncoders();
-				walkStraight(lowSpd, comSpd);
-				wait1Msec(400);
-				completeStop(1000);
+				//how to position the robot @ the center of the hallway ?? still not good @ case#1
+				positionAdjByLeftUltra();
+				adjustRobotByLeftUltra();
 
-				turnRight(90, turnSpd, 0);
-				completeStop(1000);
+				moveforward(18, lowSpd-10);
 
-				resetEncoders();
-				while(SensorValue(frontUltra)>15){
-					walkStraight(lowSpd, comSpd);
-				}
-				completeStop(1000);
+				if(isFlameOff){
+					jobWellDone(2);
+				}else{
+					// start room#2
+					turnRight(90, turnSpd, 0);
+					completeStop(1000);
 
+					moveforward(10, comSpd);
+					resetEncoders();
+					while(SensorValue(frontUltra)>15){
+							walkStraight(lowSpd, comSpd);
+					}
+					completeStop(1000);
 
+					turnRight(90, turnSpd, 0);
+					completeStop(1000);
 
+					bool _isContinueR2 = true; //in case detect dog before getting into room#2
+					bool _inWallR2 = false;
+					resetEncoders();
+					int _right2 = 100;
+					while(SensorValue(frontUltra) > 20){
+							walkStraight(lowSpd-20, comSpd-20);
+							_right2 = SensorValue(rightUltra);
+							writeDebugStreamLine("right sensor %d", _right2);
+							if(!_inWallR2){
+									if(_right2 < 16) _inWallR2 = true;
+							}else{ // start to hit wall
+									if(_right2 > 50){
+										// detect the room#2 open
+										_isContinueR2 = false;
+										break;
+									}
+							}
 
-			//	if(SensorValue(rightUltra)<2*rightSpace){
-			if(true){ // determines if the doggo is blocking de wae
-				//if the dog is there, turn right.
-				turnRight(180, turnSpd, 0);
+					}
+					completeStop(0);
 
-				completeStop(1000);
+					if(_isContinueR2){
+						resetEncoders();
+						turnRight(180, turnSpd, 0);
+						wait1Msec(1000);
+						completeStop(1000);
+					}else{
+						// all set
+					}
 
-				//hop like a bonnie rabbit
-				resetEncoders();
-				walkStraight(lowSpd, comSpd);
-				wait1Msec(500);
-				completeStop(1000);
-
-				//first leg of da daetour. this is so cool
-				resetEncoders();
-				while(SensorValue(leftUltra)<rightSpace){
-					walkStraight(lowSpd, comSpd);
-				}
-
-				//hop like a bonnie wabbit v2
-				resetEncoders();
-				walkStraight(lowSpd, comSpd);
-				wait1Msec(200);
-				completeStop(500);
-
-				//self explanitory
-				turnLeft(90, turnSpd, 0);
-
-				//hop like a wonnie babbit v3
-				resetEncoders();
-				walkStraight(lowSpd, comSpd);
-				wait1Msec(500);
-				completeStop(500);
-
-				//second leg of da daetour. this is also so cool
-				resetEncoders();
-				while(SensorValue(leftUltra)<rightSpace){
-					walkStraight(lowSpd, comSpd);
-				}
-
-				//vop hike l aonnie wabbit b4
-				resetEncoders();
-				walkStraight(lowSpd, comSpd);
-				wait1Msec(400);
-				completeStop(500);
-
-				//solf explanitairy
-				turnLeft(90, turnSpd, 0);
-
-				resetEncoders();
-				walkStraight(lowSpd, comSpd);
-				wait1Msec(500);
-				completeStop(500);
-
-				//third leg of dae daetor. t  h  i  s     i  s     a  l  s  o     c  o  o  l
-				resetEncoders();
-				while(SensorValue(leftUltra)<rightSpace){
-					walkStraight(lowSpd, comSpd);
-				}
-
-				//bop vike h lonnie aabbit w5
-				resetEncoders();
-				walkStraight(lowSpd, comSpd);
-				wait1Msec(300);
-				completeStop(500);
-
-				//eoly sxplanitairf
-				turnLeft(90, turnSpd, 0);
-
-				//wop bike v honnie labbit a6
-				resetEncoders();
-				walkStraight(lowSpd, comSpd);
-				wait1Msec(1100);
-				completeStop(500);
-
-				//fourth leg of dae daetor. this is also cool FLEX ON DEM HATRS
-				//resetEncoders();
-				//while(SensorValue(leftUltra)<rightSpace){
-				//	walkStraight(lowSpd, comSpd);
-				//}
-
-				//solf explanitairy once agian begone
-				turnLeft(90, turnSpd, 0);
-
-				resetEncoders();
-				while(SensorValue[frontUltra]>27){
-					walkStraight(lowSpd, comSpd);//go into the room
-				}
-				completeStop(1000);
-				turnRight(180, turnSpd, 0);						// put the flame sense code right here, DAD, my little 13 year old brain can't handle all of this.
-				completeStop(1000);//180 degree scan
+				  }
 			}
-
-			turnRight(90, turnSpd, 0);
-			completeStop(1000);
-
-			resetEncoders();
-			walkStraight(lowSpd, comSpd);
-			wait1Msec(300);
-			completeStop(1000);
-
-			resetEncoders();
-			while(SensorValue(rightUltra)<rightSpace){
-				walkStraight(lowSpd, comSpd);
-			}
-			completeStop(1000);
-
-			resetEncoders();
-			walkStraight(lowSpd, comSpd);
-			wait1Msec(300);
-			completeStop(1000);
-
-			turnRight(90, turnSpd, 0);
-			completeStop(1000);
-
-			while(SensorValue(frontUltra)>30){
-				walkStraight(lowSpd-20, comSpd-20);
-			}
-
-
-			// add the flame sense program
-
-			}
-
 		}
 }

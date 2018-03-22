@@ -640,7 +640,14 @@ task main()
 					turnRight(90, turnSpd, 0);
 					completeStop(1000);
 
-					moveforward(10, comSpd);
+					moveforward(40, comSpd);
+					positionAdjByRightUltra();
+					adjustRobotByRightUltra();
+					resetEncoders();
+					while(SensorValue(rightUltra)< rightSpace){
+							walkStraight(lowSpd, comSpd);
+					}
+					moveforward(50, comSpd);
 					resetEncoders();
 					while(SensorValue(frontUltra)>15){
 							walkStraight(lowSpd, comSpd);
@@ -664,6 +671,8 @@ task main()
 									if(_right2 > 50){
 										// detect the room#2 open
 										_isContinueR2 = false;
+										moveforward(20, turnSpd);
+										turnRight(90, turnSpd, 0);
 										break;
 									}
 							}
@@ -674,13 +683,123 @@ task main()
 					if(_isContinueR2){
 						resetEncoders();
 						turnRight(180, turnSpd, 0);
-						wait1Msec(1000);
+						//completeStop(1000);
+						adjustRobotByRightUltra();
+						close2wall();
+						resetEncoders();
+						turnLeft(90, turnSpd, 0);
+						adjustRobotByRightUltra();
+						adjustRobotByRightUltra();
+						//hop like a bonnie rabbit
+						moveforward(15, comSpd);
+						//first leg of da daetour. this is so cool
+						resetEncoders();
+						while(!(SensorValue(leftUltra) > (2*rightSpace))){
+							walkStraight(lowSpd, comSpd);
+						}
+						//completeStop(1000);
+
+						//hop like a bonnie wabbit v2
+						moveforward(22, turnSpd);
+						//self explanitory
+						turnLeft(90, turnSpd, 0);
+						//hop like a wonnie babbit v3
+						moveforward(20, comSpd);
+
+						//second leg of da daetour. this is also so cool
+						/*resetEncoders();
+						while(SensorValue(rightUltra)<rightSpace){
+							walkStraight(lowSpd, comSpd);
+						}*/
+						moveforward(65, comSpd);
+
+						//vop hike l aonnie wabbit b4
+						close2wall();
+						turnLeft(90, turnSpd, 0);
+						adjustRobotByRightUltra();
+						adjustRobotByRightUltra();
+						moveforward(20, comSpd);
+						//third leg of dae daetor. t  h  i  s     i  s     a  l  s  o     c  o  o  l
+						resetEncoders();
+						while(SensorValue(leftUltra)<rightSpace){
+							walkStraight(lowSpd, comSpd);
+						}
 						completeStop(1000);
-					}else{
-						// all set
+
+						//bop vike h lonnie aabbit w5
+						close2wall();
+						//eoly sxplanitairf
+						turnLeft(90, turnSpd, 0);
+						adjustRobotByRightUltra();
+						adjustRobotByRightUltra();
+
+						//wop bike v honnie labbit a6
+						resetEncoders();
+						while(true){
+							walkStraight(lowSpd, comSpd);
+							if(SensorValue(leftUltra) < 90) break;
+						}
+						//completeStop(0);
+						moveforward(30, turnSpd);
+
+						turnLeft(90, turnSpd, 0);
+						completeStop(0);
 					}
 
-				  }
+					moveforward(33+12, turnSpd);
+					/*while(SensorValue(frontUltra) < 18){
+						walkStraight(lowSpd, lowSpd);
+					}*/
+					completeStop(0);
+					// start flame detecting
+					int _ticks1_2b = right4flame(180, turnSpd);
+					completeStop(1000);
+					if(isFlameDetected){
+							int _ticks3_2b = turnLeft((180 - (_ticks1_2b*10/rightTicks) - flameTargetAdj), turnSpd, 0);
+							SensorValue[redLed] = 0; // turn on LED
+							putOffFlame(); // put off flame
+							// how to finish the rest of turn
+							turnRight(_ticks3_2b*10/leftTicks, turnSpd, 0);
+							completeStop(1000);
+					}
+
+					//return to start, all done
+					adjustRobotByRightUltra();
+					close2wall();
+					if(!_isContinueR2){
+						jobWellDone(1);
+					}else{
+						turnRight(90, turnSpd, 0);
+						adjustRobotByLeftUltra();
+						close2wall();
+						turnRight(90, turnSpd, 0);
+						adjustRobotByLeftUltra();
+						moveforward(20, comSpd);
+						resetEncoders();
+						while(!(SensorValue(rightUltra) > (2*rightSpace))){
+							walkStraight(lowSpd, comSpd);
+						}
+						moveforward(22, turnSpd);
+						//self explanitory
+						turnRight(90, turnSpd, 0);
+						//hop like a wonnie babbit v3
+						moveforward(20, comSpd);
+						//second leg of da daetour. this is also so cool
+						/*resetEncoders();
+						while(SensorValue(rightUltra)<rightSpace){
+							walkStraight(lowSpd, comSpd);
+						}*/
+						moveforward(40, comSpd);
+						resetEncoders();
+						while(!(SensorValue(rightUltra) > (2*rightSpace))){
+							walkStraight(lowSpd, comSpd);
+						}
+						moveforward(20, turnSpd);
+						jobWellDone(2);
+
+					}
+
+				 }
 			}
 		}
 }

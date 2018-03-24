@@ -17,8 +17,8 @@
 		//int lowSpd = 70;
 		int comSpd = 50;
 		int lowSpd = 40;
-		int rightTicks = 41; //60
-		int leftTicks = 42;	//57
+		int rightTicks = 40; //60
+		int leftTicks = 41;	//57
 		int turnSpd = 50;
 		float halfSec50dist = 15.4;
 		int minDistant = 12;
@@ -28,7 +28,8 @@
 		//int frontSpace = 12; //(46-30)/2
 		int rightSpace = 23;
 		int flameDetected = 120;	//250
-		int flameTargetAdj = 0; // 8
+		int flameTargetAdj = 10; // 8
+		int flameTargetLeftAdj = -10;
 		int flameOff = 100;
 		bool isFlameDetected = false;
 		bool isFlameOff = false;
@@ -265,8 +266,8 @@ void jobWellDone(int LorR){
 				walkStraight(lowSpd,comSpd);
 		}
 		completeStop(1000);
-		turnRight(180, turnSpd,0);
-		completeStop(0);
+	//	turnRight(180, turnSpd,0);
+	//	completeStop(0);
 }
 
 void close2wall(){
@@ -399,7 +400,7 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<700){
+		while(time1(T1)<400){
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(500);
@@ -426,12 +427,16 @@ task main()
 		turnRight(90, turnSpd, 0);	//turn to the room so we can almost enter.
 		completeStop(1000);
 
+		adjustRobotByLeftUltra();
 		//push robot into room#1 to reduce front ultrasonic false reading
 		resetEncoders();
 		clearTimer(T1);
 		while(time1(T1)<1000){
 			walkStraight(lowSpd, comSpd);
 		}
+
+		adjustRobotByLeftUltra();
+
 		//drive into the room
 		resetEncoders();
 		while(SensorValue[frontUltra]>30){
@@ -444,7 +449,12 @@ task main()
 		int _ticks1 = right4flame((180+60), turnSpd);
 		completeStop(1000);
 		if(isFlameDetected){
-			int _ticks3 = turnLeft(((180+60) - _ticks1*10/rightTicks), turnSpd, 0);
+			int _frameAdj = flameTargetLeftAdj;
+			if(_ticks1*10/rightTicks > 60){
+				//if +180 havig adj
+				_frameAdj = flameTargetAdj;
+			}
+			int _ticks3 = turnLeft(((180+60) - _ticks1*10/rightTicks - _frameAdj), turnSpd, 0);
 			completeStop(1000);
 			SensorValue[redLed] = 0; // turn on LED
 			putOffFlame(); // put off flame
@@ -482,7 +492,7 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<300){
+		while(time1(T1)<202){
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(500);
@@ -519,7 +529,7 @@ task main()
 			adjustRobotByLeftUltra();
 
 			//drive into the room#3
-			moveforward(36, lowSpd-10);
+			moveforward(30, lowSpd-10);
 
 			// updated by Qian on 03/06/18 -- scan @ entry
 			turnLeft(60, turnSpd, 0); // to cover all directions
@@ -528,7 +538,13 @@ task main()
 			if(isFlameDetected){
 				if((_ticks1_3*10/rightTicks) < 90){ // meaning flame is on the left 60+30 angles range
 
-					int _ticks3_3 = turnLeft((60+60-(_ticks1_3*10/rightTicks)), turnSpd, 0); //back to start point
+					int _frameAdj = flameTargetLeftAdj;
+					if(_ticks1_3*10/rightTicks > 60){
+						//if +180 havig adj
+						//_frameAdj = flameTargetAdj;
+					}
+
+					int _ticks3_3 = turnLeft((60+60-(_ticks1_3*10/rightTicks) - _frameAdj), turnSpd, 0); //back to start point
 					completeStop(1000);
 					SensorValue[redLed] = 0; // turn on LED
 					putOffFlame(); // put off flame
@@ -552,7 +568,13 @@ task main()
 					int _ticks1_3b = right4flame(180, turnSpd);
 					completeStop(1000);
 					if(isFlameDetected){
-						int _ticks3_3b = turnLeft((180 - (_ticks1_3b*10/rightTicks) - flameTargetAdj), turnSpd, 0);
+
+						int _frameAdj = flameTargetLeftAdj;
+						if(_ticks1_3b*10/rightTicks > 60){
+							//if +180 havig adj
+							_frameAdj = flameTargetAdj;
+						}
+						int _ticks3_3b = turnLeft((180 - (_ticks1_3b*10/rightTicks) - _frameAdj), turnSpd, 0);
 						SensorValue[redLed] = 0; // turn on LED
 						putOffFlame(); // put off flame
 						// how to finish the rest of turn

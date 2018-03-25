@@ -466,7 +466,6 @@ task main()
 		while(time1(T1)<1000){
 			walkStraight(lowSpd, comSpd);
 		}
-
 		adjustRobotByLeftUltra();
 
 		//drive into the room
@@ -593,14 +592,21 @@ task main()
 					turnLeft(60, turnSpd, 0); //back to start point
 					completeStop(1000);
 					resetEncoders();
-					while(SensorValue[frontUltra]>(25+stdLength*2)){
+					while(SensorValue[frontUltra]>(25+stdLength)){
 						walkStraight(lowSpd, comSpd);  //Walk straight
 					}
 					completeStop(100);
 					//adjust robot body to be staright
 					adjustRobotByLeftUltra();
-					adjustRobotByLeftUltra();
 					completeStop(500);
+					turnRight(90, turnSpd, 0);
+					completeStop(100);
+					while(SensorValue[frontUltra] > 40){
+						walkStraight(lowSpd, comSpd);
+					}
+					completeStop(100);
+					turnLeft(90,turnSpd, 0);
+					completeStop(100);
 
 					int _ticks1_3b = right4flame(180, turnSpd);
 					writeDebugStreamLine("degrees %d", _ticks1_3b*10/rightTicks);

@@ -25,7 +25,7 @@
 		int minDistant = 12;
 		int ticks360As33cm = 559;
 		int rightSpace = 23;
-		int flameDetected = 120;	//250
+		int flameDetected = 150;	//250, 120
 		int flameTargetAdj = 10; // 8
 		int flameTargetLeftAdj = -10;
 		int flameOff = 100;
@@ -246,12 +246,12 @@ void putOffFlame(){
 					}else{
 						//-30~+30
 						turnLeft(60, turnSpd, 0);
-						int _extraTicks = right4flame((60+30), lowSpd);
-						int _extraTicks2 = turnLeft((60+30-_extraTicks*10/rightTicks), lowSpd, 0);
+						int _extraTicks = right4flame((60+60), lowSpd); //changed from r40 to r60 for equal amount scan
+						int _extraTicks2 = turnLeft((60+60-_extraTicks*10/rightTicks), lowSpd, 0);
 						SensorValue[fan] = 1;	//start fan
 						wait1Msec(3000);
 						SensorValue[fan] = 0;	//stop fan
-						int _leftdeg = _extraTicks2*10/leftTicks - 30;
+						int _leftdeg = _extraTicks2*10/leftTicks - 60;
 						if(_leftdeg < 0){
 							turnLeft(-1*_leftdeg, turnSpd, 0);
 						}else{
@@ -658,11 +658,32 @@ task main()
 				completeStop(1000);
 				if(isFlameDetected){
 					if((_ticks1_4*10/leftTicks) < 90){ // meaning flame is on the right 60+30 angles range
-						int _ticks3_4 = turnRight((60+60-(_ticks1_4*10/leftTicks)), turnSpd, 0);
-						SensorValue[redLed] = 0; // turn on LED
-						putOffFlame(); // put off flame
-						// how to finish the rest of turn
-						turnLeft((120+_ticks3_4*10/rightTicks), turnSpd, 0);
+						int _ticks3_4 = turnRight((60+60-(_ticks1_4*10/leftTicks)- 1.5*flameTargetLeftAdj), turnSpd, 0);
+						if(SensorValue[frontUltra] > (30+20)){
+							//move forward
+							int _deg4 = (_ticks3_4*10/rightTicks - 60);
+							if(_deg4<0){
+								turnRight(-1*_deg4, turnSpd, 0);
+							}else{
+								turnLeft(_deg4, turnSpd, 0);
+							}
+							adjustRobotByRightUltra();
+							moveforward(25, lowSpd);
+							turnRight(60, turnSpd, 0); // to cover all directions
+							int _ticks1_4c = left4flame((60+60), turnSpd);
+							//completeStop(1000);
+							int _ticks3_4c = turnRight((60+60-(_ticks1_4c*10/leftTicks)- 1.5*flameTargetLeftAdj), turnSpd, 0);
+							SensorValue[redLed] = 0; // turn on LED
+							putOffFlame(); // put off flame
+							turnLeft((120+_ticks3_4c*10/rightTicks), turnSpd, 0);
+							adjustRobotByLeftUltra();
+							moveforward(23, lowSpd);
+						}else{
+							SensorValue[redLed] = 0; // turn on LED
+							putOffFlame(); // put off flame
+							// how to finish the rest of turn
+							turnLeft((120+_ticks3_4*10/rightTicks), turnSpd, 0);
+						}
 						completeStop(1000);
 					}else{ // flame is on right side more than 30 angles
 						isFlameDetected = false; //reset for moving forward on right side scan only
@@ -672,11 +693,14 @@ task main()
 					// move deep into the room
 					turnRight(60, turnSpd, 0); //back to start point
 					completeStop(1000);
-					moveforward(20, lowSpd-10);
+					adjustRobotByRightUltra();
+					//if(SensorValue[frontUltra]> (122-35-30)){
+						moveforward(20, lowSpd-10);
+					//}
 					int _ticks1_4b = left4flame(180, turnSpd);
 					completeStop(1000);
 					if(isFlameDetected){
-						int _ticks3_4b = turnRight((180 - (_ticks1_4b*10/leftTicks) - flameTargetAdj), turnSpd, 0);
+						int _ticks3_4b = turnRight((180 - (_ticks1_4b*10/leftTicks)), turnSpd, 0);
 						SensorValue[redLed] = 0; // turn on LED
 						putOffFlame(); // put off flame
 						// how to finish the rest of turn

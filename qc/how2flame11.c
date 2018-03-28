@@ -237,6 +237,7 @@ void putOffFlame(){
 		bool _first = true;
 		while(true){
 				//writeDebugStreamLine("IR %d", SensorValue[IR_sensor]);
+				wait1Msec(100);
 				if(SensorValue[IR_sensor] > flameOff){
 					if(_first){
 						SensorValue[fan] = 1;	//start fan
@@ -827,21 +828,28 @@ task main()
 						//wop bike v honnie labbit a6
 						resetEncoders();
 						while(true){
-							walkStraight(lowSpd, comSpd);
+							walkStraight(lowSpd-10, comSpd-10);
 							if(SensorValue(leftUltra) < 90) break;
 						}
-						//completeStop(0);
-						moveforward(30, turnSpd);
+						completeStop(0);
+						moveforward(30, lowSpd-10);
 
 						turnLeft(90, turnSpd, 0);
 						completeStop(0);
 					}
 
-					moveforward(33+12, turnSpd);
+					moveforward(12, turnSpd);
+					completeStop(0);
+					positionAdjByLeftUltra();
+					adjustRobotByLeftUltra();
+					adjustRobotByLeftUltra();
+					completeStop(0);
+					moveforward(7, turnSpd);
+					completeStop(0);
 					/*while(SensorValue(frontUltra) < 18){
 						walkStraight(lowSpd, lowSpd);
 					}*/
-					completeStop(0);
+					//return to start, all done
 					// start flame detecting
 					int _ticks1_2b = right4flame(180, turnSpd);
 					completeStop(1000);
@@ -855,6 +863,7 @@ task main()
 					}
 
 					//return to start, all done
+					positionAdjByRightUltra();
 					adjustRobotByRightUltra();
 					close2wall();
 					if(!_isContinueR2){

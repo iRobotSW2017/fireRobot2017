@@ -1,0 +1,10 @@
+  
+
+degrees 0
+flame level 0 67 0
+flame level 67 68 0
+flame level 0 67 0
+flame level 67 68 0
+room2 99 71
+IR 530
+IR 68

@@ -550,13 +550,9 @@ task main()
 			//allow the robot to move forward, to reduce ultrasonic noise
 			moveforward(40, lowSpd);
 
-			completeStop(0);
-			positionAdjByRightUltra();
-			positionAdjByLeftUltra();
-
 			resetEncoders();
 			while(SensorValue[rightUltra]<rightSpace){
-				walkStraight(lowSpd-10, comSpd-10);
+				walkStraight(lowSpd, comSpd);
 			}
 			completeStop(1000);
 			close2wall();
@@ -641,7 +637,7 @@ task main()
 
 			resetEncoders();
 			while(SensorValue[leftUltra]<80){
-				walkStraight(lowSpd-30, comSpd-30);
+				walkStraight(lowSpd-20, comSpd-20);
 			}
 			completeStop(0);
 
@@ -649,8 +645,8 @@ task main()
 			positionAdjByRightUltra();
 			adjustRobotByRightUltra();
 
-			moveforward(15, lowSpd-20);
-			//completeStop(1000);
+			moveforward(15, lowSpd-10);
+			completeStop(1000);
 
 			if(isFlameOff){
 				jobWellDone(1);
@@ -659,9 +655,9 @@ task main()
 				//positionAdjByRightUltra();
 				adjustRobotByRightUltra();
 
-				moveforward((38+8), lowSpd-20);
+				moveforward((38+8), lowSpd-10);
 				turnLeft(90, turnSpd, 0);
-				moveforward(8, lowSpd-10);
+				moveforward(5, lowSpd-10);
 				turnRight(90, turnSpd, 0);
 
 				// updated by Qian on 03/06/18 -- scan @ entry
@@ -723,9 +719,9 @@ task main()
 					}
 				}
 
+				adjustRobotByLeftUltra();
+				adjustRobotByLeftUltra();
 				positionAdjByLeftUltra();
-				adjustRobotByLeftUltra();
-				adjustRobotByLeftUltra();
 				//adjustRobotByLeftUltra();
 
 				resetEncoders();
@@ -738,7 +734,7 @@ task main()
 				positionAdjByLeftUltra();
 				adjustRobotByLeftUltra();
 
-				moveforward(20, lowSpd-20);//10, lowspd-10
+				moveforward(20-8, lowSpd-10);//10, lowspd-10
 
 				if(isFlameOff){
 					jobWellDone(2);

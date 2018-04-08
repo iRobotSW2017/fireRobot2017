@@ -15,11 +15,11 @@
 //global variables
 		//int comSpd = 90;
 		//int lowSpd = 70;
-		int comSpd = 60;
-		int lowSpd = 50;
-		int rightTicks = 48; //50
-		int leftTicks = 49;	//51
-		int turnSpd = 65;
+		int comSpd = 60;//was 50
+		int lowSpd = 50;//40
+		int rightTicks = 50; //40
+		int leftTicks = 51;	//41
+		int turnSpd = 60;//50
 		//float halfSec50dist = 15.4;
 		float stdLength = 7.7; //cm
 		int minDistant = 12;
@@ -725,7 +725,7 @@ task main()
 				positionAdjByLeftUltra();
 				adjustRobotByLeftUltra();
 
-				moveforward(18, lowSpd-10);
+				moveforward(10, lowSpd-10);//18, lowspd-10
 
 				if(isFlameOff){
 					jobWellDone(2);

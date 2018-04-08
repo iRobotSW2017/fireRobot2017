@@ -15,11 +15,11 @@
 //global variables
 		//int comSpd = 90;
 		//int lowSpd = 70;
-		int comSpd = 60;
-		int lowSpd = 50;
-		int rightTicks = 48; //50
-		int leftTicks = 49;	//51
-		int turnSpd = 65;
+		int comSpd = 50;
+		int lowSpd = 40;
+		int rightTicks = 40; //60
+		int leftTicks = 41;	//57
+		int turnSpd = 50;
 		//float halfSec50dist = 15.4;
 		float stdLength = 7.7; //cm
 		int minDistant = 12;

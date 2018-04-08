@@ -436,7 +436,7 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<400){
+		while(time1(T1)<300){  //Used to be 400
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(500);
@@ -448,7 +448,7 @@ task main()
 		//allow the robot to move forward
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<1000){
+		while(time1(T1)<900){  //1000
 			walkStraight(lowSpd, comSpd);
 		}
 
@@ -467,7 +467,7 @@ task main()
 		//push robot into room#1 to reduce front ultrasonic false reading
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<1000){
+		while(time1(T1)<900){  //1000
 			walkStraight(lowSpd, comSpd);
 		}
 		adjustRobotByLeftUltra();
@@ -529,7 +529,7 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<202){
+		while(time1(T1)<102){  //202
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(500);

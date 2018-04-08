@@ -15,11 +15,11 @@
 //global variables
 		//int comSpd = 90;
 		//int lowSpd = 70;
-		int comSpd = 60;
-		int lowSpd = 50;
-		int rightTicks = 48; //50
-		int leftTicks = 49;	//51
-		int turnSpd = 65;
+		int comSpd = 60;//was 50
+		int lowSpd = 50;//40
+		int rightTicks = 50; //40
+		int leftTicks = 51;	//41
+		int turnSpd = 60;//50
 		//float halfSec50dist = 15.4;
 		float stdLength = 7.7; //cm
 		int minDistant = 12;
@@ -696,9 +696,11 @@ task main()
 					// move deep into the room
 					turnRight(60, turnSpd, 0); //back to start point
 					completeStop(1000);
+					positionAdjByRightUltra();
+					adjustRobotByRightUltra();
 					adjustRobotByRightUltra();
 					//if(SensorValue[frontUltra]> (122-35-30)){
-						moveforward(20, lowSpd-10);
+						moveforward(12, lowSpd-10);
 					//}
 					int _ticks1_4b = left4flame(180, turnSpd);
 					completeStop(1000);
@@ -712,6 +714,8 @@ task main()
 					}
 				}
 
+				adjustRobotByLeftUltra();
+				adjustRobotByLeftUltra();
 				positionAdjByLeftUltra();
 				adjustRobotByLeftUltra();
 
@@ -723,9 +727,9 @@ task main()
 
 				//how to position the robot @ the center of the hallway ?? still not good @ case#1
 				positionAdjByLeftUltra();
-				adjustRobotByLeftUltra();
+				//adjustRobotByLeftUltra();
 
-				moveforward(18, lowSpd-10);
+				moveforward(15, lowSpd-10);//10, lowspd-10
 
 				if(isFlameOff){
 					jobWellDone(2);
@@ -770,7 +774,7 @@ task main()
 									if(_right2 > 50){
 										// detect the room#2 open
 										_isContinueR2 = false;
-										moveforward(20, turnSpd);
+										moveforward(12, turnSpd); //20
 										positionAdjByLeftUltra();
 										turnRight(90, turnSpd, 0);
 										break;
@@ -782,12 +786,12 @@ task main()
 
 					if(_isContinueR2){
 						resetEncoders();
-						turnRight(180, (turnSpd-10), 0);
+						turnRight(90, turnSpd, 0);
 						//completeStop(1000);
 						//adjustRobotByRightUltra();
-						close2wall();
-						resetEncoders();
-						turnLeft(90, (turnSpd-10), 0);
+					//	close2wall();
+				//		resetEncoders();
+				//		turnLeft(90, (turnSpd-10), 0);
 						adjustRobotByRightUltra();
 						adjustRobotByRightUltra();
 						//hop like a bonnie rabbit

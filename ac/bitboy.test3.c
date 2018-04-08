@@ -17,8 +17,8 @@
 		//int lowSpd = 70;
 		int comSpd = 60;
 		int lowSpd = 50;
-		int rightTicks = 48; //50
-		int leftTicks = 49;	//51
+		int rightTicks = 46; //48
+		int leftTicks = 47;	//49
 		int turnSpd = 65;
 		//float halfSec50dist = 15.4;
 		float stdLength = 7.7; //cm
@@ -419,12 +419,15 @@ task main()
 		}
 		wait1Msec(500);
 
+
 		// check whether robot is facing room#2
 		if(SensorValue[rightUltra]>2*rightSpace){
 			turnRight(90, turnSpd,0);
 			completeStop(500);
 		}
 
+		adjustRobotByRightUltra();
+		adjustRobotByRightUltra();
 		//start room#1 -----
 		//Right motor is better to use than fwd motor because of different interferences
 		resetEncoders();
@@ -436,7 +439,7 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<400){
+		while(time1(T1)<300){  //Used to be 400
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(500);
@@ -448,7 +451,7 @@ task main()
 		//allow the robot to move forward
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<1000){
+		while(time1(T1)<900){  //1000
 			walkStraight(lowSpd, comSpd);
 		}
 
@@ -467,7 +470,7 @@ task main()
 		//push robot into room#1 to reduce front ultrasonic false reading
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<1000){
+		while(time1(T1)<900){  //1000
 			walkStraight(lowSpd, comSpd);
 		}
 		adjustRobotByLeftUltra();
@@ -529,7 +532,7 @@ task main()
 		//allow the robot to move a little more, position @ the center of intersection
 		resetEncoders();
 		clearTimer(T1);
-		while(time1(T1)<202){
+		while(time1(T1)<102){  //202
 			walkStraight(lowSpd, comSpd);
 		}
 		completeStop(500);

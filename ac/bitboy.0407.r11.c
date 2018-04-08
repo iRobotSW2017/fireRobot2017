@@ -15,17 +15,17 @@
 //global variables
 		//int comSpd = 90;
 		//int lowSpd = 70;
-		int comSpd = 60;
-		int lowSpd = 50;
-		int rightTicks = 48; //50
-		int leftTicks = 49;	//51
-		int turnSpd = 65;
+		int comSpd = 60;//was 50
+		int lowSpd = 50;//40
+		int rightTicks = 45; //40
+		int leftTicks = 43;	//41
+		int turnSpd = 60;//50
 		//float halfSec50dist = 15.4;
 		float stdLength = 7.7; //cm
 		int minDistant = 12;
 		int ticks360As33cm = 559;
 		int rightSpace = 23;
-		int flameDetected = 150;	//250, 120
+		int flameDetected = 250;	//150, 120
 		int flameTargetAdj = 10; // 8
 		int flameTargetLeftAdj = -10;
 		int flameOff = 80; // 100
@@ -423,6 +423,8 @@ task main()
 		if(SensorValue[rightUltra]>2*rightSpace){
 			turnRight(90, turnSpd,0);
 			completeStop(500);
+			adjustRobotByRightUltra();
+			adjustRobotByRightUltra();
 		}
 
 		//start room#1 -----
@@ -653,7 +655,10 @@ task main()
 				//positionAdjByRightUltra();
 				adjustRobotByRightUltra();
 
-				moveforward(38, lowSpd-10);
+				moveforward((38+8), lowSpd-10);
+				turnLeft(90, turnSpd, 0);
+				moveforward(5, lowSpd-10);
+				turnRight(90, turnSpd, 0);
 
 				// updated by Qian on 03/06/18 -- scan @ entry
 				turnRight(60, turnSpd, 0); // to cover all directions
@@ -662,9 +667,9 @@ task main()
 				if(isFlameDetected){
 					if((_ticks1_4*10/leftTicks) < 90){ // meaning flame is on the right 60+30 angles range
 						int _ticks3_4 = turnRight((60+60-(_ticks1_4*10/leftTicks)- 1.5*flameTargetLeftAdj), turnSpd, 0);
-						if(SensorValue[frontUltra] > (30+20)){
+						if(SensorValue[frontUltra] > (30+20-8)){
 							//move forward
-							int _deg4 = (_ticks3_4*10/rightTicks - 60);
+							int _deg4 = (_ticks3_4*10/rightTicks - 30);
 							if(_deg4<0){
 								turnRight(-1*_deg4, turnSpd, 0);
 							}else{
@@ -672,13 +677,13 @@ task main()
 							}
 							adjustRobotByRightUltra();
 							moveforward(25, lowSpd);
-							turnRight(60, turnSpd, 0); // to cover all directions
-							int _ticks1_4c = left4flame((60+60), turnSpd);
+							turnRight(30, turnSpd, 0); // to cover all directions
+							int _ticks1_4c = left4flame((30+30), turnSpd);
 							//completeStop(1000);
-							int _ticks3_4c = turnRight((60+60-(_ticks1_4c*10/leftTicks)- 1.5*flameTargetLeftAdj), turnSpd, 0);
+							int _ticks3_4c = turnRight((30+30-(_ticks1_4c*10/leftTicks)- 1.5*flameTargetLeftAdj), turnSpd, 0);
 							SensorValue[redLed] = 0; // turn on LED
 							putOffFlame(); // put off flame
-							turnLeft((120+_ticks3_4c*10/rightTicks), turnSpd, 0);
+							turnLeft((150+_ticks3_4c*10/rightTicks), turnSpd, 0);
 							adjustRobotByLeftUltra();
 							moveforward(23, lowSpd);
 						}else{
@@ -696,9 +701,11 @@ task main()
 					// move deep into the room
 					turnRight(60, turnSpd, 0); //back to start point
 					completeStop(1000);
+					positionAdjByRightUltra();
+					adjustRobotByRightUltra();
 					adjustRobotByRightUltra();
 					//if(SensorValue[frontUltra]> (122-35-30)){
-						moveforward(20, lowSpd-10);
+						moveforward((12-8), lowSpd-10);
 					//}
 					int _ticks1_4b = left4flame(180, turnSpd);
 					completeStop(1000);
@@ -712,8 +719,10 @@ task main()
 					}
 				}
 
-				positionAdjByLeftUltra();
 				adjustRobotByLeftUltra();
+				adjustRobotByLeftUltra();
+				positionAdjByLeftUltra();
+				//adjustRobotByLeftUltra();
 
 				resetEncoders();
 				while(SensorValue[rightUltra]<65){
@@ -725,7 +734,7 @@ task main()
 				positionAdjByLeftUltra();
 				adjustRobotByLeftUltra();
 
-				moveforward(18, lowSpd-10);
+				moveforward(20-8, lowSpd-10);//10, lowspd-10
 
 				if(isFlameOff){
 					jobWellDone(2);
@@ -770,7 +779,7 @@ task main()
 									if(_right2 > 50){
 										// detect the room#2 open
 										_isContinueR2 = false;
-										moveforward(20, turnSpd);
+										moveforward(12, turnSpd); //20
 										positionAdjByLeftUltra();
 										turnRight(90, turnSpd, 0);
 										break;
@@ -782,12 +791,12 @@ task main()
 
 					if(_isContinueR2){
 						resetEncoders();
-						turnRight(180, (turnSpd-10), 0);
+						turnRight(90, turnSpd, 0);
 						//completeStop(1000);
 						//adjustRobotByRightUltra();
-						close2wall();
-						resetEncoders();
-						turnLeft(90, (turnSpd-10), 0);
+					//	close2wall();
+				//		resetEncoders();
+				//		turnLeft(90, (turnSpd-10), 0);
 						adjustRobotByRightUltra();
 						adjustRobotByRightUltra();
 						//hop like a bonnie rabbit
@@ -845,7 +854,7 @@ task main()
 						completeStop(0);
 						moveforward(30, lowSpd-10);
 
-						turnLeft(90, turnSpd, 0);
+						turnLeft(80, turnSpd, 0);
 						completeStop(0);
 					}
 
